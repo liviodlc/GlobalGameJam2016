@@ -1,5 +1,6 @@
 var configs = {
-    dataSampleInterval: 100 // milliseconds
+    dataSampleInterval: 20, // milliseconds
+    showLiveData: false
 }
 
 var t0 = new Date();
@@ -10,24 +11,124 @@ var allSampledData = [];
 
 var flagNextDatum = false;
 
+
+
 // ============================================================ handlers and listeners
 
 function deviceOrientationHandler(e) {
-/*
-    var a = document.getElementById('alpha');
-    var b = document.getElementById('beta');
-    var g = document.getElementById('gamma');
-
-    a.innerText = e.alpha;
-    b.innerText = e.beta;
-*/
+    // Compute orientation velocity because rotationRate looks like an acceleration
+    if (lastOrientation) {
+        e.dAlpha = shortestDistanceOnCircleSigned(e.alpha - lastOrientation.alpha, 360);
+        e.dBeta = shortestDistanceOnCircleSigned(e.beta - lastOrientation.beta, 360);
+        e.dGamma = shortestDistanceOnCircleSigned(e.gamma - lastOrientation.gamma, 360);
+    }
+    else {
+        e.dAlpha = 0;
+        e.dBeta = 0;
+        e.dGamma =0;
+    }
 
     lastOrientation = e;
+    updateLiveData();
+
 }
 
 
 function deviceMotionHandler(e) {
-/*
+    lastMotion = e;
+    updateLiveData();
+}
+
+if (window.DeviceOrientationEvent && window.DeviceMotionEvent) {
+    window.addEventListener('deviceorientation', deviceOrientationHandler, false);
+    window.addEventListener('devicemotion', deviceMotionHandler, false);
+}
+else {
+    document.getElementById('subtitle').innerText("Uh oh, this device doesn't support the game client");
+}
+
+
+
+// ============================================================ detecting gestures
+
+
+// The spin detector looks for when the orientation.alpha goes past 360deg cumulatively
+var spinDetector = {
+    start: null,
+
+    totalSpinSoFar: 0,
+
+    running: false,
+    waitingForDataBeforeStarting: false,
+
+
+    // this is when we tell the player to spin in a circle
+    initiate: function() {
+        this.running = true;
+        this.start = getLastDatum();
+
+        if (!this.start) {
+            this.waitingForDataBeforeStarting = true;
+            return;
+        }
+
+        setText("message", "Spin in a circle!");
+        setText("spin-detection", "NO");
+        setText("spin-start", round(this.start.orientation.alpha, 2));
+    },
+
+    update: function() {
+        if (this.waitingForDataBeforeStarting) {
+            this.initiate();
+            return;
+        }
+
+        var d = getLastDatum().orientation;
+
+        // See how far the player has spun since the last update
+        this.totalSpinSoFar += d.dAlpha;
+
+        setText("spin-alpha", round(d.alpha, 2));
+        setText("spin-dAlpha", round(d.dAlpha, 2));
+        setText("spin-total", round(this.totalSpinSoFar, 2));
+
+        if (Math.abs(this.totalSpinSoFar) > 355) {
+            this.triggerDetection();
+        }
+    },
+
+    triggerDetection: function() {
+        setText("spin-detection", "YES");
+        setText("message", "WOW YOU DID IT!");
+        this.running = false;
+    }
+
+}
+
+
+// ============================================================ outputting data or whatever
+
+function setText(id, text) {
+    document.getElementById(id).innerText = text;
+}
+
+function updateLiveData() {
+    if (!configs.showLiveData) return;
+
+    // ORIENTATION
+    document.getElementById('liveData').remove();
+
+    var a = document.getElementById('alpha');
+    var b = document.getElementById('beta');
+    var g = document.getElementById('gamma');
+
+    e = lastOrientation;
+    a.innerText = e.alpha;
+    b.innerText = e.beta;
+    g.innerText = e.gamma;
+
+    // MOTION
+
     var ax = document.getElementById('accelerationX');
     var ay = document.getElementById('accelerationY');
     var az = document.getElementById('accelerationZ');
@@ -38,33 +139,23 @@ function deviceMotionHandler(e) {
 
     var i = document.getElementById('interval');
 
+    e = lastMotion;
     ax.innerText = e.acceleration.x;
     ay.innerText = e.acceleration.y;
     az.innerText = e.acceleration.z;
-
     rAlpha.innerText = e.rotationRate.alpha;
     rBeta.innerText = e.rotationRate.beta;
     rGamma.innerText = e.rotationRate.gamma;
-
     i.innerText = e.interval;
-
-*/
-
-    lastMotion = e;
 }
 
-if (window.DeviceOrientationEvent && window.DeviceMotionEvent) {
-    window.addEventListener('deviceorientation', deviceOrientationHandler, false);
-    window.addEventListener('devicemotion', deviceMotionHandler, false);
+function getLastDatum() {
+    return allSampledData[allSampledData.length - 1]
 }
-else{
-    document.getElementById('subtitle').innerText("Uh oh, this device doesn't support the game client");
-}
-
-// ============================================================ outputting data
 
 var printNextDatum = function(datum) {
     if (allSampledData.length === 0) return;
+    if (!datum) return;
 
     var div = document.createElement('div');
 
@@ -84,9 +175,9 @@ var printNextDatum = function(datum) {
     document.getElementById('data').appendChild(div);
 };
 
-function round(n, d) {
-    return Math.floor(n * Math.pow(10, d)) * Math.pow(10, -d);
-}
+// function round(n, d) {
+//     return Math.floor(n * Math.pow(10, d)) * Math.pow(10, -d);
+// }
 
 
 function pushData() {
@@ -95,6 +186,7 @@ function pushData() {
     allSampledData.push({
         time: (new Date()) - t0, // milliseconds
         orientation: lastOrientation,
+        motion: lastMotion,
         rotationRate: lastMotion.rotationRate,
         acceleration: lastMotion.acceleration,
         interval: lastMotion.interval
@@ -112,9 +204,24 @@ window.addEventListener('touchend', flagData);
 
 function go() {
     pushData();
-    printNextDatum(allSampledData[allSampledData.length - 1]);
+    printNextDatum(getLastDatum());
     flagNextDatum = false;
+
+    // Detect gestures
+    if (spinDetector.running) {
+        spinDetector.update();
+    }
+
     window.setTimeout(go, configs.dataSampleInterval);
 }
 
-go();
+
+
+
+window.onload = function() {
+    if (!configs.showLiveData) {
+        document.getElementById('liveData').remove();
+    }
+    spinDetector.initiate();
+    go();
+}
