@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>Kung Fu WIZARD BATTLE</title>
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
         <script type="text/javascript" src="central/configs.js"></script>
         <script type="text/javascript" src="central/client.js"></script>
@@ -68,10 +69,10 @@
         <h3 class='bigtext' id='bigtext1'>kung fu</h3>
         <h3 class='bigtext' id='bigtext2'>wizard</h3>
         <h3 class='bigtext' id='bigtext3'>battle</h3>
-        <input type='button' onclick='javascript:stopPolling();' value='Stop Polling'>
+        <input type='button' onclick='javascript:endSession();' value='End Game'>
         <div id='game-status'></div>
-        <div id='player-0'></div>
-        <div id='player-1'></div>
+        <div id='player-0' class='player'></div>
+        <div id='player-1' class='player'></div>
         <div id='next-sequence'></div>
     </body>
 </html>

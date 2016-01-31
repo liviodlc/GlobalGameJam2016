@@ -38,5 +38,12 @@ module.exports = utils = {
       'Yberilin',
       'Mirythien'
     ]);
+  },
+
+  nextPlayerId: function() {
+    lastPlayerId += 1;
+    return lastPlayerId;
   }
 }
+
+var lastPlayerId = 0;

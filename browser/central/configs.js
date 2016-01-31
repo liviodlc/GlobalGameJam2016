@@ -2,6 +2,7 @@ var endpoints = {
   // connect: '/central/connect'
   startSession: '/session/start',
   pollSession: '/session/poll',
+  endSession: '/session/end',
 }
 
 var configs = {
