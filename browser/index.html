@@ -20,21 +20,22 @@
             margin: 0;
             position: fixed;
             top:0;
-            left: 50px;
+            left: 3000px;
             color: rgba(241, 178, 153, 0.3);
             z-index: -100;
         }
         #bigtext1 {
-            left: 50px;
+            /*left: 50px;*/
             top: -3rem;
         }
         #bigtext2 {
-            left: 175px;
+            /*left: 175px;*/
             top: 5rem;
             font-size: 180px;
+            left: -2000px;
         }
         #bigtext3 {
-            left: 250px;
+            /*left: 250px;*/
             top: 10rem;
             font-size: 300px;
         }
@@ -62,6 +63,63 @@
             padding-left: 20px;
             font-size: 24px;
         }
+
+        /* fun animation */
+
+        #bigtext1, #bigtext3 {
+            animation: slideRight 5s linear;
+            -webkit-animation: slideRight 5s linear;
+            -moz-animation: slideRight 5s linear;
+            -o-animation: slideRight 5s linear;
+        }
+
+        #bigtext2 {
+            animation: slideLeft 5s linear;
+            -webkit-animation: slideLeft 5s linear;
+            -moz-animation: slideLeft 5s linear;
+            -o-animation: slideLeft 5s linear;
+        }
+
+        @keyframes slideRight {
+          0% { left: 0; }
+          100% { left: 3000px; }
+        }
+
+        @-moz-keyframes slideRight {
+          0% { left: 0; }
+          100% { left: 3000px; }
+        }
+
+        @-webkit-keyframes slideRight {
+          0% { left: 0; }
+          100% { left: 3000px; }
+        }
+
+        @-o-keyframes slideRight {
+          0% { left: 0; }
+          100% { left: 3000px; }
+        }
+
+        @keyframes slideLeft {
+          0% { left: 500px; }
+          100% { left: -3000px; }
+        }
+
+        @-moz-keyframes slideLeft {
+          0% { left: 500px; }
+          100% { left: -3000px; }
+        }
+
+        @-webkit-keyframes slideLeft {
+          0% { left: 500px; }
+          100% { left: -3000px; }
+        }
+
+        @-o-keyframes slideLeft {
+          0% { left: 500px; }
+          100% { left: -3000px; }
+        }
+
     </style>
     <body>
         <h1 id='title'>KUNG FU WIZARD BATTLE</h1>
