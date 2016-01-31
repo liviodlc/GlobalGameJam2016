@@ -1,0 +1,77 @@
+<!-- This is the Central Web Client (CWC) to show the game state to the players etc etc -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+        <script type="text/javascript" src="central/configs.js"></script>
+        <script type="text/javascript" src="central/client.js"></script>
+    </head>
+    <style>
+        body {
+            height: 100%;
+            background: #C43700;
+            color: #cfe;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        .bigtext {
+            font-size: 150px;
+            margin: 0;
+            position: fixed;
+            top:0;
+            left: 50px;
+            color: rgba(241, 178, 153, 0.3);
+            z-index: -100;
+        }
+        #bigtext1 {
+            left: 50px;
+            top: -3rem;
+        }
+        #bigtext2 {
+            left: 175px;
+            top: 5rem;
+            font-size: 180px;
+        }
+        #bigtext3 {
+            left: 250px;
+            top: 10rem;
+            font-size: 300px;
+        }
+        input {
+            color: #C43700;
+            text-align: center;
+        }
+        #next-sequence {
+            height: 100px;
+        }
+        .gesture {
+            padding-top: 20px;
+            float: left;
+        }
+        .gesture img {
+            display: block;
+            height: 100px;
+            float: left;
+            padding-right: 20px;
+        }
+        .gesture span {
+            display: block;
+            width: 500px;
+            height: 100px;
+            padding-left: 20px;
+            font-size: 24px;
+        }
+    </style>
+    <body>
+        <h1 id='title'>KUNG FU WIZARD BATTLE</h1>
+        <h2 id='subtitle'>Kung Fu Wizard Battle.</h2>
+        <h3 class='bigtext' id='bigtext1'>kung fu</h3>
+        <h3 class='bigtext' id='bigtext2'>wizard</h3>
+        <h3 class='bigtext' id='bigtext3'>battle</h3>
+        <input type='button' onclick='javascript:stopPolling();' value='Stop Polling'>
+        <div id='game-status'></div>
+        <div id='player-0'></div>
+        <div id='player-1'></div>
+        <div id='next-sequence'></div>
+    </body>
+</html>

@@ -201,7 +201,7 @@ detectors.sustainedSpeed = {
 
         var accel = Math.abs(abs3(d.acceleration));
 
-        if (accel > this.requiredAccel) {
+        if (accel > this.maxAccelSoFar) {
             this.maxAccelSoFar = accel;
         }
 
