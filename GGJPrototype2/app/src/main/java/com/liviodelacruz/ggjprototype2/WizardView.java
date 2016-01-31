@@ -12,7 +12,6 @@ import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import org.wiigee.control.AndroidWiigee;
 
 public class WizardView extends SurfaceView implements Runnable, SensorEventListener {
 
