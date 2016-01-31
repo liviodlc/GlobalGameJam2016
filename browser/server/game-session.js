@@ -31,7 +31,7 @@ module.exports = GameSession = {
     if (!this.alive) {
       return 'DEAD';
     }
-    else if (this.players.length < configs.minPlayers) {
+    else if (this.players.length < configs.playersPerSession) {
       return 'WAITING';
     }
     else {
@@ -51,9 +51,19 @@ module.exports = GameSession = {
 
   addPlayer: function(player) {
     this.players.push(player);
-    if (this.players.length >= configs.minPlayers) {
+    if (this.players.length >= configs.playersPerSession) {
       this.start();
     }
+  },
+
+  hasPlayerId: function(id) {
+    var hasId = false;
+    this.players.forEach(function(p) { hasId = hasId || (id === p.id); });
+    return hasId;
+  },
+
+  isFull: function() {
+    return this.players.length === configs.playersPerSession;
   },
 
   start: function() {
