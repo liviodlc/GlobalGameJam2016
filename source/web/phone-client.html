@@ -1,0 +1,95 @@
+<html>
+    <head>
+        <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+        <script type="text/javascript" src="phone-client.js"></script>
+        <script type="text/javascript" src="lib/math2d.js"></script>
+    </head>
+    <style>
+        body {
+            height: 100%;
+            background: #ccc;
+            font-family: monospace;
+        }
+        #message {
+            font-size: 48pt;
+            color: blue;
+        }
+    </style>
+    <body>
+        <h1 id='title'>KUNG FU WIZARD BATTLE</h1>
+        <h2 id='subtitle'>Kung Fu Wizard Battle.</h2>
+
+        <div id="message"></div>
+
+        <div id="liveData">
+            <b>alpha :</b> <span id='alpha'></span><br/>
+            <b>beta :</b> <span id='beta'></span><br/>
+            <b>gamma :</b> <span id='gamma'></span><br/>
+            <hr>
+
+            <b>rotationRate</b><br/>
+            <b>alpha :</b><span id='rotationRateAlpha'></span><br/>
+            <b>beta :</b><span id='rotationRateBeta'></span><br/>
+            <b>gamma :</b><span id='rotationRateGamma'></span><br/>
+            <hr>
+
+            <b>acceleration</b><br/>
+            <b>X :</b><span id='accelerationX'></span><br/>
+            <b>Y :</b><span id='accelerationY'></span><br/>
+            <b>Z :</b><span id='accelerationZ'></span><br/>
+            <hr>
+
+            <b>acceleration</b><br/>
+            <b>X :</b><span id='accelerationX'></span><br/>
+            <b>Y :</b><span id='accelerationY'></span><br/>
+            <b>Z :</b><span id='accelerationZ'></span><br/>
+            <hr>
+
+            <b>absAccel :</b><span id='absAccel'></span><br/>
+            <b>absAccelG :</b><span id='absAccelG'></span><br/>
+            <b>orientdiff :</b><span id='orientdiff'></span><br/>
+            <hr>
+
+            <b>maxAccel :</b><span id='maxAccel'></span><br/>
+            <b>maxAccelWithG :</b><span id='maxAccelWithG'></span><br/>
+            <b>orientdiffDuringMax :</b><span id='orientdiffDuringMax'></span><br/>
+
+            <hr>
+            <b>max accelerations</b><br/>
+            <b>X :</b><span id='maxAccelerationX'></span><br/>
+            <b>Y :</b><span id='maxAccelerationY'></span><br/>
+            <b>Z :</b><span id='maxAccelerationZ'></span><br/>
+
+            <b>min accelerations</b><br/>
+            <b>X :</b><span id='minAccelerationX'></span><br/>
+            <b>Y :</b><span id='minAccelerationY'></span><br/>
+            <b>Z :</b><span id='minAccelerationZ'></span><br/>
+            <hr>
+            <b>interval :</b> <span id='interval'></span><br/>
+        </div>
+
+        <div id="spinGestureData">
+            <h3>Spin</h3>
+            <b>starting alpha :</b> <span id='spin-start'></span><br/>
+            <b>current alpha :</b> <span id='spin-alpha'></span><br/>
+            <b>dAlpha :</b> <span id='spin-dAlpha'></span><br/>
+            <b>totalSpinSoFar :</b> <span id='spin-total'></span><br/>
+            <b>detection? :</b> <span id='spin-detection'>NO</span><br/>
+        </div>
+
+        <div id="speedGestureData">
+            <h3>Speed</h3>
+            <b>maxAccelSoFar :</b> <span id='speed-max-accel'></span><br/>
+            <b>detection? :</b> <span id='speed-detection'>NO</span><br/>
+        </div>
+        <div id="sustainedSpeedGestureData">
+            <h3>Sustained Speed</h3>
+            <b>maxAccelSoFar :</b> <span id='sustained-speed-max-accel'></span><br/>
+            <b>numFramesAttained :</b> <span id='sustained-speed-num-frames'></span><br/>
+            <b>detection? :</b> <span id='sustained-speed-detection'>NO</span><br/>
+        </div>
+
+        <hr>
+        <p id='data'></p>
+    </body>
+</html>

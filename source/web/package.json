@@ -1,0 +1,8 @@
+{
+    "name": "ggj2016",
+    "main": "server.js",
+    "dependencies": {
+        "express": "latest",
+        "socket.io": "latest"
+    }
+}
