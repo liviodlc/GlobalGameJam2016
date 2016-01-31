@@ -90,16 +90,21 @@
             font-size: smaller;
             font-weight: 100;
         }
-        .player span {
+        .player span.playeritem  {
             display: inline-block;
             width: 300px;
             text-align: center;
         }
-        .player .waiting-for-player {
+        .player span.vs {
+            display: inline-block;
+            width: 50px;
+            text-align: center;
+        }
+        /*.player .playeritem {
             font-style: italic;
             opacity: 0.5;
             font-size: 18px;
-        }
+        }*/
         .player .has-player {
             font-size: 30px;
             font-weight: normal;
@@ -110,17 +115,23 @@
         }
 
         .player .has-player.won {
-            animation: grow 1s ease-in;
+            /*animation: grow 1s ease-in;
             -webkit-animation: grow 1s ease-in;
             -moz-animation: grow 1s ease-in;
-            -o-animation: grow 1s ease-in;
+            -o-animation: grow 1s ease-in;*/
+            font-size: 100px;
+            transition: font-size 2s;
+            -webkit-transition: font-size 2s;
         }
 
         .player .has-player.lost {
-            animation: shrink 1s ease-in;
+            /*animation: shrink 1s ease-in;
             -webkit-animation: shrink 1s ease-in;
             -moz-animation: shrink 1s ease-in;
-            -o-animation: shrink 1s ease-in;
+            -o-animation: shrink 1s ease-in;*/
+            font-size: 13px;
+            transition: font-size 2s;
+            -webkit-transition: font-size 2s;
         }
 
         #next-sequence {
@@ -134,14 +145,14 @@
         }
         .gesture img {
             display: block;
-            height: 100px;
+            height: 120px;
             float: left;
             padding-right: 20px;
         }
         .gesture span {
             display: block;
             width: 300px;
-            height: 100px;
+            height: 120px;
             padding-left: 20px;
             font-size: 24px;
         }
@@ -262,17 +273,18 @@
 
     </style>
     <body>
-        <!-- <img id='background-fire' src='/assets/fire.gif'> -->
+        <img id='background-fire' src='/assets/fire.gif'>
         <h1 id='title'>Kung Fu Wizard Battle!</h1>
         <h3 class='bigtext' id='bigtext1'>kung fu</h3>
         <h3 class='bigtext' id='bigtext2'>wizard</h3>
         <h3 class='bigtext' id='bigtext3'>battle</h3>
         <input id='end-game' type='button' onclick='javascript:endSession();' value='end game'>
-        <div id='game-status'></div>
+        <!-- <div id='game-status'></div> -->
+        <div>First wizard to cast the spell WINS!</div>
         <div class='player'>
-            <span id='player-0' class='waiting-for-player'>[waiting for player 1]</span>
-            vs.
-            <span id='player-1' class='waiting-for-player'>[waiting for player 2]</span>
+            <span id='player-0' class='playeritem waiting-for-player'>[waiting for player 1]</span>
+            <span id='vs'>vs.</span>
+            <span id='player-1' class='playeritem waiting-for-player'>[waiting for player 2]</span>
         </div>
         <div id='next-sequence'></div>
     </body>

@@ -70,8 +70,6 @@ module.exports = GameSession = {
   },
 
   playerFinishedSequence: function(player_id) {
-    console.log('Player finished:', player_id);
-    console.log('My players:', JSON.stringify(this.playersFinished, null, '  '));
     if (!(player_id in this.playersFinished)) return;
     this.playersFinished[player_id] = true;
     this.someoneFinished = true;

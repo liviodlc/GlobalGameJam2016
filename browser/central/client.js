@@ -135,7 +135,8 @@ var render = {
     }
     if (winner_id) {
         $('.has-player').addClass('lost');
-        $('.player-id-' + winner_id).addClass('won');
+        $('.player-id-' + winner_id).removeClass('lost').addClass('won');
+        $('#vs').hide();
     }
   },
 
@@ -151,6 +152,14 @@ var render = {
       var $img = $('<img>').attr('src', data.image);
       var $text = $('<span>').text(data.label);
       $gesture.append($img).append($text).appendTo($container);
+
+      if (data.label2 && data.image2) {
+        var $gesture2 = $('<div>').addClass('gesture').addClass('gesture-' + gesture + '2');
+        var $img2 = $('<img>').attr('src', data.image2);
+        var $text2 = $('<span>').text(data.label2);
+        $gesture2.append($img2).append($text2).appendTo($container);
+      }
+
     }
   }
 }
