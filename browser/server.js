@@ -88,9 +88,9 @@ app.get('/player/connect', function(req, res) {
 
   // make sure there isn't already a player with this id
   if (currentGameSession.hasPlayerId(req.query.id)) {
-    return res.end({
+    return res.end(JSON.stringify({
       session: currentGameSession.getData()
-    })
+    }));
   }
 
   // make sure the game isn't already full
