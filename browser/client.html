@@ -2,6 +2,7 @@
     <head>
         <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
         <script type="text/javascript" src="client.js"></script>
+        <script type="text/javascript" src="lib/math2d.js"></script>
     </head>
     <style>
         body {
@@ -9,32 +10,47 @@
             background: #ccc;
             font-family: monospace;
         }
+        #message {
+            font-size: 48pt;
+            color: red;
+        }
     </style>
     <body>
-<!--
         <h1 id='title'>KUNG FU WIZARD BATTLE</h1>
         <h2 id='subtitle'>Kung Fu Wizard Battle.</h2>
 
-        <b>alpha :</b> <span id='alpha'></span><br/>
-        <b>beta :</b> <span id='beta'></span><br/>
-        <b>gamma :</b> <span id='gamma'></span><br/>
-        <hr>
+        <div id="message"></div>
 
-        <b>rotationRate</b><br/>
-        <b>alpha :</b><span id='rotationRateAlpha'></span><br/>
-        <b>beta :</b><span id='rotationRateBeta'></span><br/>
-        <b>gamma :</b><span id='rotationRateGamma'></span><br/>
-        <hr>
+        <div id="liveData">
+            <b>alpha :</b> <span id='alpha'></span><br/>
+            <b>beta :</b> <span id='beta'></span><br/>
+            <b>gamma :</b> <span id='gamma'></span><br/>
+            <hr>
 
-        <b>acceleration</b><br/>
-        <b>X :</b><span id='accelerationX'></span><br/>
-        <b>Y :</b><span id='accelerationY'></span><br/>
-        <b>Z :</b><span id='accelerationZ'></span><br/>
-        <hr>
+            <b>rotationRate</b><br/>
+            <b>alpha :</b><span id='rotationRateAlpha'></span><br/>
+            <b>beta :</b><span id='rotationRateBeta'></span><br/>
+            <b>gamma :</b><span id='rotationRateGamma'></span><br/>
+            <hr>
 
-        <b>interval :</b> <span id='interval'></span><br/>
+            <b>acceleration</b><br/>
+            <b>X :</b><span id='accelerationX'></span><br/>
+            <b>Y :</b><span id='accelerationY'></span><br/>
+            <b>Z :</b><span id='accelerationZ'></span><br/>
+            <hr>
+
+            <b>interval :</b> <span id='interval'></span><br/>
+        </div>
+
+        <div id="spinGestureData">
+            <b>starting alpha :</b> <span id='spin-start'></span><br/>
+            <b>current alpha :</b> <span id='spin-alpha'></span><br/>
+            <b>dAlpha :</b> <span id='spin-dAlpha'></span><br/>
+            <b>totalSpinSoFar :</b> <span id='spin-total'></span><br/>
+            <b>detection? :</b> <span id='spin-detection'>NO</span><br/>
+        </div>
+
         <hr>
--->
         <p id='data'></p>
     </body>
 </html>
