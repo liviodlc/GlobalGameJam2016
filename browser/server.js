@@ -12,7 +12,7 @@ var app = express();
 
 // serve client files
 app.use(express.static(__dirname));
-app.listen(80);
+app.listen(process.env.PORT || 80);
 
 
 app.get('/hello', function(req, res) {
@@ -41,23 +41,14 @@ app.get('/session/start', function(req, res) {
   }
 
   currentGameSession.initialize();
-
-  var output = {
-    session: currentGameSession.getData()
-  }
-
-  res.end(JSON.stringify(output));
+  res.end(standardOutput());
 })
 
 app.get('/session/poll', function(req, res) {
   res.set('Content-Type', 'application/json');
   // console.log('/session/poll', req.query);
 
-  var output = {
-    session: currentGameSession.getData()
-  }
-
-  res.end(JSON.stringify(output));
+  res.end(standardOutput());
 })
 
 app.get('/session/end', function(req, res) {
@@ -67,11 +58,7 @@ app.get('/session/end', function(req, res) {
   // Todo: have the browser client send a key to identify itself
   currentGameSession.end();
 
-  var output = {
-    session: currentGameSession.getData()
-  }
-
-  res.end(JSON.stringify(output));
+  res.end(standardOutput());
 })
 // ================================================== player endpoints
 
@@ -125,21 +112,26 @@ app.get('/player/poll', function(req, res) {
     }));
   }
 
+  res.end(standardOutput());
+})
 
-  // send whole game state
-  var output = {
+
+app.get('/player/fail', function(req, res) {
+  var id = req.query.id;
+  res.end('NYI');
+})
+
+app.get('/player/sequence/finish', function(req, res) {
+  var id = req.query.id;
+  currentGameSession.playerFinishedSequence(req.query.id);
+  res.end(standardOutput());
+})
+
+// ================================================== misc
+
+/// Standard res.end output
+standardOutput: function() {
+  return JSON.stringify({
     session: currentGameSession.getData()
-  }
-
-  res.end(JSON.stringify(output));
-})
-
-
-app.get('/player/sequence/fail', function(req, res) {
-  res.end('NYI');
-})
-
-app.get('/player/sequence/succeed', function(req, res) {
-  res.end('NYI');
-})
-
+  })
+}

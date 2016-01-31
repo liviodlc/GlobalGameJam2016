@@ -14,6 +14,9 @@ module.exports = GameSession = {
   started: false,
   players: [],
   sequence: [],
+  playersFinished: {
+    // map id > true / false
+  }
 
   // this will be sent to the CWC and the player phones
   getData: function() {
@@ -51,9 +54,15 @@ module.exports = GameSession = {
 
   addPlayer: function(player) {
     this.players.push(player);
+    this.playersFinished[id] = false;
     if (this.players.length >= configs.playersPerSession) {
       this.start();
     }
+  },
+
+  playerFinishedSequence: function(player_id) {
+    if (!(player_id in this.playersFinished)) return;
+    this.playersFinished[player_id] = true;
   },
 
   hasPlayerId: function(id) {

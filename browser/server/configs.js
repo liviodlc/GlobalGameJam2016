@@ -12,5 +12,7 @@ module.exports = configs = {
     'SHAKE'
   ],
 
+  finishGesture: 'FINISH',
+
   playersPerSession: 2
 }
