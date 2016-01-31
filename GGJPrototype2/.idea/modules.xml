@@ -4,8 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GGJPrototype2.iml" filepath="$PROJECT_DIR$/GGJPrototype2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wiigee-lib-1.5.6/wiigee-lib-1.5.6.iml" filepath="$PROJECT_DIR$/wiigee-lib-1.5.6/wiigee-lib-1.5.6.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wiigee-plugin-android-1.0.2a/wiigee-plugin-android-1.0.2a.iml" filepath="$PROJECT_DIR$/wiigee-plugin-android-1.0.2a/wiigee-plugin-android-1.0.2a.iml" />
     </modules>
   </component>
 </project>

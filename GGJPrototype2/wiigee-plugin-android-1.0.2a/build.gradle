@@ -1,2 +1,0 @@
-configurations.create("default")
-artifacts.add("default", file('wiigee-plugin-android-1.0.2a.jar'))
