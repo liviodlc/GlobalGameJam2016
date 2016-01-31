@@ -1,7 +1,7 @@
 $(window).on('load', function() {
   console.log('Loaded');
   startSession();
-  // render.nextSequence(['SLASH', 'SPIN', 'SPIN']); // for testing
+  render.nextSequence(['SLASH', 'SPIN', 'SPIN']); // for testing
 })
 
 var gameState = {
@@ -11,6 +11,10 @@ var gameState = {
 }
 
 function endSession() {
+  if (!gameState.running) {
+    window.location = '';
+    return;
+  }
   $.get(endpoints.endSession, function(response) {
     $('#end-game').attr('value', 'refresh to play again')
   });
