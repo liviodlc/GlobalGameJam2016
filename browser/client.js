@@ -7,6 +7,8 @@ var t0 = new Date();
 
 var lastOrientation = null;
 var lastMotion = null;
+
+
 var allSampledData = [];
 
 var flagNextDatum = false;
@@ -106,6 +108,70 @@ var spinDetector = {
 
 }
 
+
+// The spin detector looks for when the orientation.alpha goes past 360deg cumulatively
+var speedDetector = {
+    start: null,
+    running: false,
+    waitingForDataBeforeStarting: false,
+    maxAccelSoFar: 0,
+
+    // this is when we tell the player to spin in a circle
+    initiate: function() {
+        this.running = true;
+        this.start = getLastDatum();
+
+        if (!this.start) {
+            this.waitingForDataBeforeStarting = true;
+            return;
+        }
+        this.waitingForDataBeforeStarting = false;
+
+        setText("message", "Go really fast!");
+        setText("speed-detection", "NO");
+    },
+
+    update: function() {
+        if (this.waitingForDataBeforeStarting) {
+            this.initiate();
+            return;
+        }
+
+        var d = getLastDatum();
+
+        var accel = Math.abs(abs3(d.acceleration));
+
+
+        if (accel > this.maxAccelSoFar) {
+            this.maxAccelSoFar = accel;
+        }
+
+        setText('speed-max-accel', this.maxAccelSoFar);
+
+        if (this.maxAccelSoFar > 10000000000) {
+            this.triggerDetection();
+        }
+
+
+    },
+
+    triggerDetection: function() {
+        setText("speed-detection", "YES");
+        setText("message", "WOW YOU DID IT!");
+        this.running = false;
+    }
+
+}
+
+// ============================================================ math
+
+function abs3(vector) {
+    return Math.sqrt(
+        vector.x * vector.x
+        + vector.y * vector.y
+        + vector.z * vector.z
+    );
+}
 
 // ============================================================ outputting data or whatever
 
