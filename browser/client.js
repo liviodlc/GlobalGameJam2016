@@ -1,12 +1,15 @@
 var configs = {
     dataSampleInterval: 20, // milliseconds
-    showLiveData: false
+    showLiveData: false,
+    printDataLog: false,
 }
 
 var t0 = new Date();
 
 var lastOrientation = null;
 var lastMotion = null;
+
+
 var allSampledData = [];
 
 var flagNextDatum = false;
@@ -52,8 +55,10 @@ else {
 // ============================================================ detecting gestures
 
 
+var detectors = {};
 // The spin detector looks for when the orientation.alpha goes past 360deg cumulatively
-var spinDetector = {
+
+detectors.spin = {
     start: null,
 
     totalSpinSoFar: 0,
@@ -107,10 +112,144 @@ var spinDetector = {
 }
 
 
+detectors.speed = {
+    requiredAccel: 20,
+
+    start: null,
+    running: false,
+    waitingForDataBeforeStarting: false,
+    maxAccelSoFar: 0,
+
+    // this is when we tell the player to spin in a circle
+    initiate: function() {
+        this.running = true;
+        this.start = getLastDatum();
+
+        if (!this.start) {
+            this.waitingForDataBeforeStarting = true;
+            return;
+        }
+        this.waitingForDataBeforeStarting = false;
+
+        setText("message", "Go really fast!");
+        setText("speed-detection", "NO");
+    },
+
+    update: function() {
+        if (this.waitingForDataBeforeStarting) {
+            this.initiate();
+            return;
+        }
+
+        var d = getLastDatum();
+
+        var accel = Math.abs(abs3(d.acceleration));
+
+
+        if (accel > this.maxAccelSoFar) {
+            this.maxAccelSoFar = accel;
+        }
+
+        setText('speed-max-accel', this.maxAccelSoFar);
+
+        if (this.maxAccelSoFar > this.requiredAccel) {
+            this.triggerDetection();
+        }
+    },
+
+    triggerDetection: function() {
+        setText("speed-detection", "YES");
+        setText("message", "WOW YOU DID IT!");
+        setBgColor('green');
+        this.running = false;
+    }
+}
+
+detectors.sustainedSpeed = {
+    requiredAccel: 20,
+    numFramesRequired: 10,
+
+    start: null,
+    running: false,
+    waitingForDataBeforeStarting: false,
+    maxAccelSoFar: 0,
+    maxFramesSoFar: 0,
+    numFramesAttained: 0,
+
+    // this is when we tell the player to spin in a circle
+    initiate: function() {
+        this.running = true;
+        this.start = getLastDatum();
+
+        if (!this.start) {
+            this.waitingForDataBeforeStarting = true;
+            return;
+        }
+        this.waitingForDataBeforeStarting = false;
+
+        setText("message", "Go really fast!");
+        setText("speed-detection", "NO");
+    },
+
+    update: function() {
+        if (this.waitingForDataBeforeStarting) {
+            this.initiate();
+            return;
+        }
+
+        var d = getLastDatum();
+
+        var accel = Math.abs(abs3(d.acceleration));
+
+        if (accel > this.requiredAccel) {
+            this.maxAccelSoFar = accel;
+        }
+
+        if (accel > this.requiredAccel) {
+            this.numFramesAttained += 1;
+        }
+        else {
+            if (this.numFramesAttained > this.maxFramesSoFar) {
+                this.maxFramesSoFar = this.numFramesAttained;
+            }
+            this.numFramesAttained = 0;
+        }
+
+
+        setText('sustained-speed-max-accel', this.maxAccelSoFar);
+        setText('sustained-speed-num-frames', this.numFramesAttained);
+
+        if (this.numFramesAttained >= this.numFramesRequired) {
+            this.triggerDetection();
+        }
+    },
+
+    triggerDetection: function() {
+        setText("speed-detection", "YES");
+        setText("message", "WOW YOU DID IT!");
+        setBgColor('green');
+        this.running = false;
+    }
+}
+
+// ============================================================ math
+
+function abs3(vector) {
+    return Math.sqrt(
+        vector.x * vector.x
+        + vector.y * vector.y
+        + vector.z * vector.z
+    );
+}
+
 // ============================================================ outputting data or whatever
 
 function setText(id, text) {
     document.getElementById(id).innerText = text;
+}
+
+function setBgColor(color) {
+    document.body.style.backgroundColor = color;
 }
 
 function updateLiveData() {
@@ -155,6 +294,8 @@ function getLastDatum() {
 }
 
 var printNextDatum = function(datum) {
+    if (!configs.printDataLog) return;
+
     if (allSampledData.length === 0) return;
     if (!datum) return;
 
@@ -209,8 +350,10 @@ function go() {
     flagNextDatum = false;
 
     // Detect gestures
-    if (spinDetector.running) {
-        spinDetector.update();
+    for (var detector in detectors) {
+        if (detectors[detector].running) {
+            detectors[detector].update();
+        }
     }
 
     window.setTimeout(go, configs.dataSampleInterval);
@@ -223,6 +366,10 @@ window.onload = function() {
     if (!configs.showLiveData) {
         document.getElementById('liveData').remove();
     }
-    spinDetector.initiate();
+
+    // detectors.spin.initiate();
+    // detectors.speed.initiate();
+    detectors.sustainedSpeed.initiate();
+
     go();
 }
