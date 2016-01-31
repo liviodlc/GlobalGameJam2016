@@ -8,9 +8,11 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import org.wiigee.control.AndroidWiigee;
 
 public class WizardView extends SurfaceView implements Runnable, SensorEventListener {
 
@@ -40,8 +42,10 @@ public class WizardView extends SurfaceView implements Runnable, SensorEventList
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
 
+        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.ganon);
+        mediaPlayer.start();
 
-    // Initialize our drawing objects
+        // Initialize our drawing objects
         ourHolder = getHolder();
         paint = new Paint();
     }
