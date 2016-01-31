@@ -19,6 +19,12 @@ app.get('/hello', function(req, res) {
     res.end("Hello and welcome to KUNG FU WIZARD BATTLE");
 })
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 
 // ================================================== central-client endpoints
 
@@ -121,3 +127,4 @@ app.get('/player/sequence/fail', function(req, res) {
 app.get('/player/sequence/succeed', function(req, res) {
   res.end('NYI');
 })
+
