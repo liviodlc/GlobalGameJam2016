@@ -29,8 +29,8 @@ public class HomeView extends SurfaceView implements SurfaceHolder.Callback {
         super(context);
         this.context = context;
 
-//        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.ganon);
-//        mediaPlayer.start();
+//        MediaPlayer shakeSound = MediaPlayer.create(context, R.raw.ganon);
+//        shakeSound.start();
 
         firebg = MediaPlayer.create(context, R.raw.fire);
         firebg.setLooping(true);

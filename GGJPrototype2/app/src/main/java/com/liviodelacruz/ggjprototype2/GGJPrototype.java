@@ -79,7 +79,7 @@ public class GGJPrototype extends Activity implements NetworkerCallback {
                 getPlayerName(json);
             }
             if(json.getJSONObject("session").getString("status").equals("STARTED")){
-                Networker.sequence = json.getJSONArray("sequence");
+                WizardView.sequence = json.getJSONObject("session").getJSONArray("sequence");
                 Intent i = new Intent(this, Game.class);
                 startActivity(i);
                 return true;

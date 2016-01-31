@@ -8,9 +8,18 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import com.liviodelacruz.ggjprototype2.gestures.FinisherGesture;
+import com.liviodelacruz.ggjprototype2.gestures.Gesture;
+import com.liviodelacruz.ggjprototype2.gestures.GestureData;
+import com.liviodelacruz.ggjprototype2.gestures.ShakeGesture;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 public class WizardView extends SurfaceView implements Runnable, SensorEventListener {
 
@@ -18,16 +27,29 @@ public class WizardView extends SurfaceView implements Runnable, SensorEventList
 
     private static final int FRAME_RATE = 30;
     private static final int FRAME_PERIOD = 1000/FRAME_RATE;
-    private static final int MOVE_TIME = 2;//seconds
-    private static final int MOVE_BUFFER = 2;//seconds
+
+    public static JSONArray sequence = null;
+    private static final int GESTURE_TIME = 2;//seconds
+    private static final int GESTURE_BUFFER = 2;//seconds
+
+    private int i = 0;
+    private int n = 0;
 
     private volatile boolean playing = false;
     private Thread gameThread = null;
+
+    private Gesture currentGesture;
+    private GestureData gData;
 
     //accelerometer
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
     private int c = Color.BLACK;
+
+    //audio
+    MediaPlayer shakeSound = null;
+    MediaPlayer finisherSound = null;
+    MediaPlayer currentSound = null;
 
     // For drawing
     private Paint paint;
@@ -40,11 +62,13 @@ public class WizardView extends SurfaceView implements Runnable, SensorEventList
 
         //accelerometer
         senSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        senSensorManager.registerListener(this, senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        senSensorManager.registerListener(this, senSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_NORMAL);
 
-//        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.ganon);
-//        mediaPlayer.start();
+        gData = new GestureData();
+
+        shakeSound = MediaPlayer.create(context, R.raw.ganon);
+        finisherSound = MediaPlayer.create(context, R.raw.finisher);
 
         // Initialize our drawing objects
         ourHolder = getHolder();
@@ -53,17 +77,46 @@ public class WizardView extends SurfaceView implements Runnable, SensorEventList
         
     }
 
+    private void endGame(){
+        c = Color.BLACK;
+        Networker.getMe().finish();
+        pause();
+    }
+
+    private void nextGesture(){
+        if(i>=n) {
+            endGame();
+            return;
+        }
+        try {
+            String g = sequence.getString(i);
+            if(g.equals("SHAKE")){
+                currentGesture = new ShakeGesture();
+                currentSound = shakeSound;
+            }
+            if(g.equals("FINISH")){
+                currentGesture = new FinisherGesture();
+                currentSound = finisherSound;
+            }
+            gData = new GestureData();
+            i++;
+        }catch (JSONException e){
+            Log.e (TAG, e.toString());
+        }
+    }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         Sensor mySensor = event.sensor;
 
         if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            //update colors
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];
             c = Color.rgb((int) ((x+15) * 10), (int) ((y+15) * 10), (int) ((z+15) * 10));
-
-            
+        }else if(mySensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION){
+            gData.setLinearAcceleration(event.values);
         }
     }
 
@@ -82,7 +135,12 @@ public class WizardView extends SurfaceView implements Runnable, SensorEventList
     }
 
     private void update(){
-
+        if(currentGesture == null)
+            return;
+        if(currentGesture.detectGesture(gData)) {
+            currentSound.start();
+            nextGesture();
+        }
     }
 
     private void draw(){
@@ -128,6 +186,8 @@ public class WizardView extends SurfaceView implements Runnable, SensorEventList
     public void resume() {
         Log.d(TAG, "I'm resuming!");
         if(!playing) {
+            n = sequence.length();
+            nextGesture();
             playing = true;
             gameThread = new Thread(this);
             gameThread.start();

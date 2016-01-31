@@ -22,9 +22,9 @@ public class Networker implements Runnable {
     }
 
     private static final String TAG = Networker.class.getSimpleName();
-    private static final String ENDPOINT = "http://ggj2016game.cloudapp.net/player/connect?id=";
+    private static final String ENDPOINT_CONNECT = "http://ggj2016game.cloudapp.net/player/connect?id=";
+    private static final String ENDPOINT_FINISH = "http://ggj2016game.cloudapp.net/player/sequence/finish?id=";
 
-    public static JSONArray sequence = null;
     public static int id;
     public static String name = null;
 
@@ -48,12 +48,20 @@ public class Networker implements Runnable {
             cb2 = cb;
     }
 
+    public void finish(){
+//        try {
+            connect(ENDPOINT_FINISH + id);
+//        }catch (JSONException e){
+//            Log.e(TAG, e.toString());
+//        }
+    }
+
     @Override
     public void run(){
         while(keepPolling){
             JSONObject json = null;
             try{
-                json = new JSONObject(connect());
+                json = new JSONObject(connect(ENDPOINT_CONNECT + id));
             }catch (JSONException e){
                 Log.e(TAG, e.getMessage());
             }
@@ -74,11 +82,11 @@ public class Networker implements Runnable {
         }
     }
 
-    private String connect(){
+    private String connect(String url){
         String s = "";
-        Log.d(TAG, ENDPOINT + id);
+        Log.d(TAG, url);
         try {
-            s = new Scanner(new URL(ENDPOINT+id).openStream(), "UTF-8").useDelimiter("\\A").next();
+            s = new Scanner(new URL(url).openStream(), "UTF-8").useDelimiter("\\A").next();
         }catch (MalformedURLException e){
             Log.e(TAG, e.getMessage());
         }catch (IOException e){
