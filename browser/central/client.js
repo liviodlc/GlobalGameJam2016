@@ -10,13 +10,16 @@ var gameState = {
   sequence: []
 }
 
-function stopPolling() {
-  gameState.running = false;
+function endSession() {
+  $.get(endpoints.endSession, function(response) {});
+  setTimeout(function() {
+    gameState.running = false;
+  }, configs.pollInterval * 2)
 }
 
 function startSession() {
   console.log(endpoints.connect);
-  $.post(endpoints.startSession, function(response) {
+  $.get(endpoints.startSession, function(response) {
     console.log('new session response data:', response);
 
     if (response.error) {
@@ -32,7 +35,7 @@ function startSession() {
 function poll() {
   if (!gameState.running) { return; }
 
-  $.post(endpoints.pollSession, function(response) {
+  $.get(endpoints.pollSession, function(response) {
 
     // todo: what if server is down?
     console.log('session poll data:', response);
@@ -69,6 +72,10 @@ function handleUpdatedGameSession(session) {
   render.players(session);
 
   render.gameSessionStatus(session);
+
+  if (session.status === 'DEAD') {
+    redner.clear();
+  }
 }
 
 
@@ -77,6 +84,11 @@ var render = {
     if (error === 'GAME_ALREADY_STARTED') {
       $("#game-status").text('A game has already been started somewhere!')
     }
+  },
+
+  clear: function() {
+    $('.player').empty();
+    $('#next-sequence').empty();
   },
 
   gameSessionStatus: function(session) {

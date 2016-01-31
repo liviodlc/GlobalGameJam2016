@@ -13,7 +13,7 @@ module.exports = GameSession = {
   alive: false, // the CWC must keep pinging the server to keep it alive
   started: false,
   players: [],
-  sequence: Sequence(3), // generates a random sequence of gesture strings
+  sequence: [],
 
   // this will be sent to the CWC and the player phones
   getData: function() {
@@ -41,6 +41,12 @@ module.exports = GameSession = {
 
   initialize: function() {
     this.alive = true;
+    this.sequence = Sequence(3) // generates a random sequence of gesture strings
+  },
+
+  end: function() {
+    this.alive = false;
+    this.players = [];
   },
 
   addPlayer: function(player) {

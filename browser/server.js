@@ -22,7 +22,7 @@ app.get('/hello', function(req, res) {
 
 // ================================================== central-client endpoints
 
-app.post('/session/start', function(req, res) {
+app.get('/session/start', function(req, res) {
   res.set('Content-Type', 'application/json');
   console.log('/session/start', req.query);
 
@@ -43,7 +43,7 @@ app.post('/session/start', function(req, res) {
   res.end(JSON.stringify(output));
 })
 
-app.post('/session/poll', function(req, res) {
+app.get('/session/poll', function(req, res) {
   res.set('Content-Type', 'application/json');
   // console.log('/session/poll', req.query);
 
@@ -54,34 +54,43 @@ app.post('/session/poll', function(req, res) {
   res.end(JSON.stringify(output));
 })
 
+app.get('/session/end', function(req, res) {
+  res.set('Content-Type', 'application/json');
+  console.log('/session/end', req.query);
+
+  // Todo: have the browser client send a key to identify itself
+  currentGameSession.end();
+
+  var output = {
+    session: currentGameSession.getData()
+  }
+
+  res.end(JSON.stringify(output));
+})
 // ================================================== player endpoints
 
-app.post('/player/connect', function(req, res) {
+app.get('/player/connect', function(req, res) {
   res.set('Content-Type', 'application/json');
   console.log('/player/connect', req.query);
-
-  if (!req.query.id) {
-    return res.end(JSON.stringify({error: 'Give me your id'}));
-  }
-  // if (!req.query.name) {
-  //   return res.end(JSON.stringify({error: 'Give me your name'}));
-  // }
 
   if (!currentGameSession || !currentGameSession.alive) {
     return res.end(JSON.stringify({
       error: configs.errors.GAME_NOT_STARTED,
-      session: null
+      session: null,
+      id: null
     }));
   }
 
+  var id = utils.nextPlayerId();
 
-  var player = new Player(req.query.id);
+  var player = new Player(id);
 
   // Try to connect the player to a game session
   currentGameSession.addPlayer(player);
 
   var output = {
     message: 'Welcome ' + player.name + '!',
+    id: id,
     session: currentGameSession.getData()
   }
 
@@ -104,11 +113,11 @@ app.get('/player/poll', function(req, res) {
   res.end(JSON.stringify(output));
 })
 
-app.post('/player/hasGameStartedYet', function(req, res) {
+
+app.get('/player/sequence/fail', function(req, res) {
+  res.end('NYI');
 })
-app.post('/player/sequence/fail', function(req, res) {
-})
-app.post('/player/sequence/succeed', function(req, res) {
-})
-app.get('/player/sequence/getNext', function(req, res) {
+
+app.get('/player/sequence/succeed', function(req, res) {
+  res.end('NYI');
 })
