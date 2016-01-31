@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,11 +41,15 @@ public class Game extends Activity implements NetworkerCallback{
         layout.addView(gameView);
 
         TextView tview = new TextView(this);
-        RelativeLayout.LayoutParams tparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+        RelativeLayout.LayoutParams tparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
-        tview.setTextColor(Color.BLACK);
-        tview.setText(Networker.name);
-        tview.setTextSize(40f);
+        tparams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        tview.setTextColor(Color.parseColor("#e33500"));
+        tview.setSingleLine(false);
+        tview.setText(Networker.name + ",\nFIGHT!");
+//        tview.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        tview.setGravity(Gravity.CENTER);
+        tview.setTextSize(25f);
         layout.addView(tview, tparams);
 
         setContentView(layout, lparams);
