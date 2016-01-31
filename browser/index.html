@@ -10,10 +10,29 @@
     <style>
         body {
             height: 100%;
-            background: #C43700;
-            color: #cfe;
+            background: black;
+            color: #fff;
             font-family: monospace;
             font-weight: bold;
+            text-align: center;
+        }
+        #background-fire {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            z-index: -1000;
+        }
+        h1, h2 {
+            text-align: center;
+            font-family: Harabara Bold;
+        }
+        h1 {
+            font-size: 48px;
+        }
+        h2 {
+            font-size: 36px;
         }
         .bigtext {
             font-size: 150px;
@@ -23,21 +42,25 @@
             left: 3000px;
             color: rgba(241, 178, 153, 0.3);
             z-index: -100;
+            white-space:nowrap;
+            font-family: Harabara Bold;
         }
         #bigtext1 {
             /*left: 50px;*/
-            top: -3rem;
+            top:3rem;
+            font-size: 200px;
+            margin-left: -100px;
         }
         #bigtext2 {
             /*left: 175px;*/
-            top: 5rem;
-            font-size: 180px;
+            top: 10rem;
+            font-size: 200px;
             left: -2000px;
         }
         #bigtext3 {
             /*left: 250px;*/
-            top: 10rem;
-            font-size: 300px;
+            top: 15rem;
+            font-size: 500px;
         }
         input {
             color: #C43700;
@@ -66,7 +89,14 @@
 
         /* fun animation */
 
-        #bigtext1, #bigtext3 {
+        #bigtext1 {
+            animation: slideRight 3s linear;
+            -webkit-animation: slideRight 3s linear;
+            -moz-animation: slideRight 3s linear;
+            -o-animation: slideRight 3s linear;
+        }
+
+        #bigtext3 {
             animation: slideRight 5s linear;
             -webkit-animation: slideRight 5s linear;
             -moz-animation: slideRight 5s linear;
@@ -74,10 +104,10 @@
         }
 
         #bigtext2 {
-            animation: slideLeft 5s linear;
-            -webkit-animation: slideLeft 5s linear;
-            -moz-animation: slideLeft 5s linear;
-            -o-animation: slideLeft 5s linear;
+            animation: slideLeft 4s linear;
+            -webkit-animation: slideLeft 4s linear;
+            -moz-animation: slideLeft 4s linear;
+            -o-animation: slideLeft 4s linear;
         }
 
         @keyframes slideRight {
@@ -120,8 +150,19 @@
           100% { left: -3000px; }
         }
 
+        /* FONT */
+        /* @font-face kit by Fonts2u (http://www.fonts2u.com) */
+        @font-face {
+            font-family: "Harabara Bold";
+            src: url("assets/Harabara_Bold/Harabara.eot?") format("eot"),url("assets/Harabara_Bold/Harabara.woff") format("woff"),url("assets/Harabara_Bold/Harabara.ttf") format("truetype"),url("assets/Harabara_Bold/Harabara.svg#") format("svg");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+
     </style>
     <body>
+        <img id='background-fire' src='/assets/fire.gif'>
         <h1 id='title'>KUNG FU WIZARD BATTLE</h1>
         <h2 id='subtitle'>Kung Fu Wizard Battle.</h2>
         <h3 class='bigtext' id='bigtext1'>kung fu</h3>
