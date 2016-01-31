@@ -1,6 +1,6 @@
 var configs = {
     dataSampleInterval: 20, // milliseconds
-    showLiveData: false,
+    showLiveData: true,
     printDataLog: false,
 }
 
@@ -14,6 +14,12 @@ var allSampledData = [];
 
 var flagNextDatum = false;
 
+var maxAccelerations = {x:0, y: 0, z: 0}
+var minAccelerations = {x:0, y: 0, z: 0}
+
+var maxAccel = 0;
+var maxAccelWithG = 0;
+var orientdiffDuringMax = 0;
 
 
 // ============================================================ handlers and listeners
@@ -39,6 +45,27 @@ function deviceOrientationHandler(e) {
 
 function deviceMotionHandler(e) {
     lastMotion = e;
+
+    if (e.acceleration.x > maxAccelerations.x) { maxAccelerations.x = e.acceleration.x; }
+    if (e.acceleration.x < minAccelerations.x) { minAccelerations.x = e.acceleration.x; }
+    if (e.acceleration.y > maxAccelerations.y) { maxAccelerations.y = e.acceleration.y; }
+    if (e.acceleration.y < minAccelerations.y) { minAccelerations.y = e.acceleration.y; }
+    if (e.acceleration.z > maxAccelerations.z) { maxAccelerations.z = e.acceleration.z; }
+    if (e.acceleration.z < minAccelerations.z) { minAccelerations.z = e.acceleration.z; }
+
+
+    var absAccel = abs3(e.acceleration);
+    if (absAccel > maxAccel) {
+        maxAccel = absAccel;
+        maxAccelWithG = abs3(e.accelerationIncludingGravity)
+
+        orientdiffDuringMax = angleBetween(
+            normalizeToG(e.acceleration),
+            e.accelerationIncludingGravity
+        );
+        // orientdiffDuringMax = abs3abg(lastOrientation);
+    }
+
     updateLiveData();
 }
 
@@ -232,6 +259,74 @@ detectors.sustainedSpeed = {
     }
 }
 
+// Like the sustained one, but specifically for height
+detectors.maxVerticalAccel = {
+    requiredAccel: 20,
+    numFramesRequired: 10,
+
+    start: null,
+    running: false,
+    waitingForDataBeforeStarting: false,
+    maxAccelSoFar: 0,
+    maxFramesSoFar: 0,
+    numFramesAttained: 0,
+
+    // this is when we tell the player to spin in a circle
+    initiate: function() {
+        this.running = true;
+        this.start = getLastDatum();
+
+        if (!this.start) {
+            this.waitingForDataBeforeStarting = true;
+            return;
+        }
+        this.waitingForDataBeforeStarting = false;
+
+        setText("message", "Raise your arms up!");
+        setText("speed-detection", "NO");
+    },
+
+    update: function() {
+        if (this.waitingForDataBeforeStarting) {
+            this.initiate();
+            return;
+        }
+
+        var d = getLastDatum();
+
+        var accel = Math.abs(abs3(d.acceleration));
+
+        if (accel > this.maxAccelSoFar) {
+            this.maxAccelSoFar = accel;
+        }
+
+        if (accel > this.requiredAccel) {
+            this.numFramesAttained += 1;
+        }
+        else {
+            if (this.numFramesAttained > this.maxFramesSoFar) {
+                this.maxFramesSoFar = this.numFramesAttained;
+            }
+            this.numFramesAttained = 0;
+        }
+
+
+        setText('sustained-speed-max-accel', this.maxAccelSoFar);
+        setText('sustained-speed-num-frames', this.numFramesAttained);
+
+        if (this.numFramesAttained >= this.numFramesRequired) {
+            this.triggerDetection();
+        }
+    },
+
+    triggerDetection: function() {
+        setText("speed-detection", "YES");
+        setText("message", "WOW YOU DID IT!");
+        setBgColor('green');
+        this.running = false;
+    }
+}
+
 // ============================================================ math
 
 function abs3(vector) {
@@ -240,6 +335,67 @@ function abs3(vector) {
         + vector.y * vector.y
         + vector.z * vector.z
     );
+}
+function abs3abg(abg_vector) {
+    // this is a hack
+    return abs3({
+        x: abg_vector.alpha,
+        y: abg_vector.beta,
+        z: abg_vector.gamma
+    })
+}
+
+function normalizeToG(xyz_vector) {
+    var sphere_vector = cart2sphere(xyz_vector);
+    sphere_vector.r = 9.8;
+    return sphere2cart(sphere_vector);
+}
+
+// function add3(v1, v2) {
+//     return {
+//         x: v1.x + v2.x,
+//         y: v1.y + v2.y,
+//         :z v1.z + v2.z,
+//     }
+// }
+// function subtract3(v1, v2) {
+//     return {
+//         x: v1.x - v2.x,
+//         y: v1.y - v2.y,
+//         z: v1.z - v2.z,
+//     }
+// }
+function dot3(v1, v2) {
+    return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z
+}
+function angleBetween(v1, v2) {
+    return degrees(Math.acos(dot3(v1, v2) / (abs3(v1) * abs3(v2))));
+}
+
+function cart2sphere(vector) {
+    var r = abs3(vector);
+    return {
+        r: r,
+        theta: Math.atan2(vector.y, vector.x),
+        phi: Math.acos(vector.z / r)
+
+    }
+}
+
+function sphere2cart(vector) {
+    return {
+        x: vector.r * Math.sin(vector.phi) * Math.cos(vector.theta),
+        y: vector.r * Math.sin(vector.phi) * Math.sin(vector.theta),
+        z: vector.r * Math.cos(vector.phi)
+    }
+}
+
+// Convert between degrees and radians
+function radians(deg) {
+  return 2*Math.PI*deg/360;
+}
+function degrees(rad) {
+  return 360*rad/(2*Math.PI);
 }
 
 // ============================================================ outputting data or whatever
@@ -256,7 +412,6 @@ function updateLiveData() {
     if (!configs.showLiveData) return;
 
     // ORIENTATION
-    document.getElementById('liveData').remove();
 
     var a = document.getElementById('alpha');
     var b = document.getElementById('beta');
@@ -287,6 +442,36 @@ function updateLiveData() {
     rBeta.innerText = e.rotationRate.beta;
     rGamma.innerText = e.rotationRate.gamma;
     i.innerText = e.interval;
+
+    setText('maxAccelerationX', round(maxAccelerations.x), 3);
+    setText('maxAccelerationY', round(maxAccelerations.y), 3);
+    setText('maxAccelerationZ', round(maxAccelerations.z), 3);
+    setText('minAccelerationX', round(minAccelerations.x), 3);
+    setText('minAccelerationY', round(minAccelerations.y), 3);
+    setText('minAccelerationZ', round(minAccelerations.z), 3);
+
+    var absAccel = abs3(e.acceleration);
+    var absAccelG = abs3(e.accelerationIncludingGravity);
+
+    setText('absAccel', round(absAccel, 2));
+    setText('absAccelG', round(absAccelG, 2));
+
+    if (absAccel > 20) {
+        var orientdiff = angleBetween(
+            normalizeToG(e.acceleration),
+            e.accelerationIncludingGravity
+        );
+        // var orientdiff = abs3abg(lastOrientation);
+        setText('orientdiff', round(orientdiff, 2));
+    
+}    else {
+        setText('orientdiff', ' ')
+    }
+
+    setText('maxAccel', round(maxAccel, 2))
+    setText('maxAccelWithG', round(maxAccelWithG, 2))
+    if (maxAccel > 8)
+        setText('orientdiffDuringMax', round(orientdiffDuringMax, 2))
 }
 
 function getLastDatum() {
@@ -333,7 +518,6 @@ function pushData() {
         acceleration: lastMotion.acceleration,
         interval: lastMotion.interval
     })
-
 }
 
 var flagData = function(e) {
@@ -369,7 +553,7 @@ window.onload = function() {
 
     // detectors.spin.initiate();
     // detectors.speed.initiate();
-    detectors.sustainedSpeed.initiate();
+    detectors.maxVerticalAccel.initiate();
 
     go();
 }

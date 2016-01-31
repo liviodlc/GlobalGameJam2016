@@ -130,7 +130,7 @@ app.get('/player/sequence/finish', function(req, res) {
 // ================================================== misc
 
 /// Standard res.end output
-standardOutput: function() {
+function standardOutput() {
   return JSON.stringify({
     session: currentGameSession.getData()
   })

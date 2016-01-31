@@ -16,7 +16,7 @@ module.exports = GameSession = {
   sequence: [],
   playersFinished: {
     // map id > true / false
-  }
+  },
 
   // this will be sent to the CWC and the player phones
   getData: function() {
