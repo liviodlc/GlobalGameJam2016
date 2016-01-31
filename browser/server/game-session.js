@@ -17,6 +17,9 @@ module.exports = GameSession = {
   playersFinished: {
     // map id > true / false
   },
+  someoneFinished: false,
+
+  lastTimeout: null, // if this timeout runs out, close the session
 
   // this will be sent to the CWC and the player phones
   getData: function() {
@@ -26,7 +29,8 @@ module.exports = GameSession = {
       players: this.players.map(function(player) {
         return player.getData();
       }),
-      sequence: this.sequence
+      sequence: this.sequence,
+      playersFinished: this.playersFinished 
     }
   },
 
@@ -37,8 +41,11 @@ module.exports = GameSession = {
     else if (this.players.length < configs.playersPerSession) {
       return 'WAITING';
     }
+    else if (this.someoneFinished) {
+      return 'FINISHED';
+    }
     else {
-      return 'STARTED'
+      return 'STARTED';
     }
   },
 
@@ -50,6 +57,8 @@ module.exports = GameSession = {
   end: function() {
     this.alive = false;
     this.players = [];
+    this.playersFinished = {};
+    this.someoneFinished = false;
   },
 
   addPlayer: function(player) {
@@ -61,8 +70,11 @@ module.exports = GameSession = {
   },
 
   playerFinishedSequence: function(player_id) {
+    console.log('Player finished:', player_id);
+    console.log('My players:', JSON.stringify(this.playersFinished, null, '  '));
     if (!(player_id in this.playersFinished)) return;
     this.playersFinished[player_id] = true;
+    this.someoneFinished = true;
   },
 
   hasPlayerId: function(id) {
@@ -77,6 +89,15 @@ module.exports = GameSession = {
 
   start: function() {
     this.started = true;
+  },
+
+  refreshTimeout: function() {
+    var _this = this;
+    if (this.lastTimeout) clearTimeout(this.lastTimeout);
+    this.lastTimeout = setTimeout(function() {
+      console.log('Session timed out after', configs.sessionTimeout, 'milliseconds of silence')
+      _this.end();
+    }, configs.sessionTimeout);
   }
 
 };

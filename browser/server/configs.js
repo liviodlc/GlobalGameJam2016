@@ -14,5 +14,7 @@ module.exports = configs = {
 
   finishGesture: 'FINISH',
 
-  playersPerSession: 2
+  playersPerSession: 2,
+
+  sessionTimeout: 20 * 1000 // end the game session after 20 seconds of silence from browser
 }

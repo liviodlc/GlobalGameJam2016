@@ -108,6 +108,21 @@
             letter-spacing: 0.1em;
             color: #FF3D00;
         }
+
+        .player .has-player.won {
+            animation: grow 1s ease-in;
+            -webkit-animation: grow 1s ease-in;
+            -moz-animation: grow 1s ease-in;
+            -o-animation: grow 1s ease-in;
+        }
+
+        .player .has-player.lost {
+            animation: shrink 1s ease-in;
+            -webkit-animation: shrink 1s ease-in;
+            -moz-animation: shrink 1s ease-in;
+            -o-animation: shrink 1s ease-in;
+        }
+
         #next-sequence {
             width: 400px;
             margin-left: auto;
@@ -194,6 +209,47 @@
           100% { left: -3000px; }
         }
 
+        /* *********** PLAYER WINNING/LOSING ANIMATIONS *********** */
+
+        @keyframes grow {
+          0% { font-size: 30px; }
+          100% { font-size: 100px; }
+        }
+
+        @-moz-keyframes grow {
+          0% { font-size: 30px; }
+          100% { font-size: 100px; }
+        }
+
+        @-webkit-keyframes grow {
+          0% { font-size: 30px; }
+          100% { font-size: 100px; }
+        }
+
+        @-o-keyframes grow {
+          0% { font-size: 30px; } }
+          100% { font-size: 100px; }
+        }
+
+        @keyframes shrink {
+          0% { font-size: 30px; }
+          100% { font-size: 10px; }
+        }
+
+        @-moz-keyframes shrink {
+          0% { font-size: 30px; }
+          100% { font-size: 10px; }
+        }
+
+        @-webkit-keyframes shrink {
+          0% { font-size: 30px; }
+          100% { font-size: 10px; }
+        }
+
+        @-o-keyframes shrink {
+          0% { font-size: 30px; }
+          100% { font-size: 10px; }
+        }
         /* FONT */
         /* @font-face kit by Fonts2u (http://www.fonts2u.com) */
         @font-face {
@@ -206,7 +262,7 @@
 
     </style>
     <body>
-        <img id='background-fire' src='/assets/fire.gif'>
+        <!-- <img id='background-fire' src='/assets/fire.gif'> -->
         <h1 id='title'>Kung Fu Wizard Battle!</h1>
         <h3 class='bigtext' id='bigtext1'>kung fu</h3>
         <h3 class='bigtext' id='bigtext2'>wizard</h3>
