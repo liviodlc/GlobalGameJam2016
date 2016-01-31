@@ -2,6 +2,7 @@ package com.liviodelacruz.ggjprototype2;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,8 +24,9 @@ public class Networker implements Runnable {
     private static final String TAG = Networker.class.getSimpleName();
     private static final String ENDPOINT = "http://ggj2016game.cloudapp.net/player/connect?id=";
 
+    public static JSONArray sequence = null;
     public static int id;
-    public static String name;
+    public static String name = null;
 
     private boolean keepPolling = true;
     private URL url = null;

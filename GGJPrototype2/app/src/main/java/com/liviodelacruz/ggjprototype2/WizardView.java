@@ -14,9 +14,12 @@ import android.view.SurfaceView;
 
 public class WizardView extends SurfaceView implements Runnable, SensorEventListener {
 
+    private static final String TAG = WizardView.class.getSimpleName();
+
     private static final int FRAME_RATE = 30;
     private static final int FRAME_PERIOD = 1000/FRAME_RATE;
-    private static final String TAG = WizardView.class.getSimpleName();
+    private static final int MOVE_TIME = 2;//seconds
+    private static final int MOVE_BUFFER = 2;//seconds
 
     private volatile boolean playing = false;
     private Thread gameThread = null;
@@ -59,6 +62,8 @@ public class WizardView extends SurfaceView implements Runnable, SensorEventList
             float y = event.values[1];
             float z = event.values[2];
             c = Color.rgb((int) ((x+15) * 10), (int) ((y+15) * 10), (int) ((z+15) * 10));
+
+            
         }
     }
 
