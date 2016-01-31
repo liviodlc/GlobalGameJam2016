@@ -82,7 +82,9 @@
             padding: 1em;
             font-family: monospace;
         }
-        #game-status {
+        #game-status,
+        #game-already-running {
+            margin-top: 1em;
             font-size: 12px;
         }
         .player {
@@ -122,6 +124,8 @@
             font-size: 100px;
             transition: font-size 2s;
             -webkit-transition: font-size 2s;
+            display: block;
+            width: 100%;
         }
 
         .player .has-player.lost {
@@ -129,32 +133,32 @@
             -webkit-animation: shrink 1s ease-in;
             -moz-animation: shrink 1s ease-in;
             -o-animation: shrink 1s ease-in;*/
-            font-size: 13px;
+            font-size: 0px;
             transition: font-size 2s;
             -webkit-transition: font-size 2s;
+            display: block;
+            width: 100%;
         }
 
         #next-sequence {
-            width: 400px;
+            width: 750px;
             margin-left: auto;
             margin-right: auto;
         }
         .gesture {
             padding-top: 20px;
             float: left;
+            width: 250px;
         }
         .gesture img {
-            display: block;
-            height: 120px;
-            float: left;
-            padding-right: 20px;
+            height: 200px;
+            margin-bottom: 20px;
+            text-align: center
         }
         .gesture span {
-            display: block;
-            width: 300px;
-            height: 120px;
-            padding-left: 20px;
             font-size: 24px;
+            font-weight: 100px;
+            line-height: 1.5em;
         }
 
         /* fun animation */
@@ -278,14 +282,19 @@
         <h3 class='bigtext' id='bigtext1'>kung fu</h3>
         <h3 class='bigtext' id='bigtext2'>wizard</h3>
         <h3 class='bigtext' id='bigtext3'>battle</h3>
-        <input id='end-game' type='button' onclick='javascript:endSession();' value='end game'>
         <!-- <div id='game-status'></div> -->
-        <div>First wizard to cast the spell WINS!</div>
-        <div class='player'>
-            <span id='player-0' class='playeritem waiting-for-player'>[waiting for player 1]</span>
-            <span id='vs'>vs.</span>
-            <span id='player-1' class='playeritem waiting-for-player'>[waiting for player 2]</span>
+        <div id='game-already-running' style='display:none'>
+            It looks like a game is already in session! Go find that game!
         </div>
-        <div id='next-sequence'></div>
+        <div id='game' style='display:none'>
+        <input id='end-game' type='button' onclick='javascript:endSession();' value='end game'>
+            <div>First wizard to cast the spell WINS!</div>
+            <div class='player'>
+                <span id='player-0' class='playeritem waiting-for-player'>[waiting for player 1]</span>
+                <span id='vs'>vs.</span>
+                <span id='player-1' class='playeritem waiting-for-player'>[waiting for player 2]</span>
+            </div>
+            <div id='next-sequence'></div>
+        </div>
     </body>
 </html>
