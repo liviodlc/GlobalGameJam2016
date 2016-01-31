@@ -34,6 +34,8 @@ function startSession() {
       return render.error(response.error);
     }
 
+    $('#game').show();
+
     gameState.running = true;
     handleUpdatedGameSession(response.session);
     poll();
@@ -99,6 +101,8 @@ var render = {
   error: function(error) {
     if (error === 'GAME_ALREADY_STARTED') {
       $("#game-status").text('A game has already been started somewhere!')
+      $("#game-already-running").show();
+      $('#game').hide()
     }
   },
 
@@ -150,14 +154,16 @@ var render = {
 
       var $gesture = $('<div>').addClass('gesture').addClass('gesture-' + gesture);
       var $img = $('<img>').attr('src', data.image);
+      var $br = $('<br>');
       var $text = $('<span>').text(data.label);
-      $gesture.append($img).append($text).appendTo($container);
+      $gesture.append($img).append($br).append($text).appendTo($container);
 
       if (data.label2 && data.image2) {
         var $gesture2 = $('<div>').addClass('gesture').addClass('gesture-' + gesture + '2');
         var $img2 = $('<img>').attr('src', data.image2);
+        var $br2 = $('<br>');
         var $text2 = $('<span>').text(data.label2);
-        $gesture2.append($img2).append($text2).appendTo($container);
+        $gesture2.append($img2).append($br2).append($text2).appendTo($container);
       }
 
     }
