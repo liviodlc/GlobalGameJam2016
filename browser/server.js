@@ -83,20 +83,34 @@ app.get('/player/connect', function(req, res) {
     return res.end(JSON.stringify({
       error: configs.errors.GAME_NOT_STARTED,
       session: null,
-      id: null
     }));
   }
 
-  var id = utils.nextPlayerId();
+  // make sure there isn't already a player with this id
+  if (currentGameSession.hasPlayerId(req.query.id)) {
+    return res.end(JSON.stringify({
+      session: currentGameSession.getData()
+    }));
+  }
 
-  var player = new Player(id);
+  // make sure the game isn't already full
+  if (currentGameSession.isFull()) {
+    return res.end(JSON.stringify({
+      error: configs.errors.GAME_FULL,
+      session: null
+    }));
+  }
+
+
+  var player = new Player(req.query.id);
 
   // Try to connect the player to a game session
   currentGameSession.addPlayer(player);
 
   var output = {
     message: 'Welcome ' + player.name + '!',
-    id: id,
+    name: player.name,
+    id: player.id,
     session: currentGameSession.getData()
   }
 
@@ -110,6 +124,7 @@ app.get('/player/poll', function(req, res) {
       session: null
     }));
   }
+
 
   // send whole game state
   var output = {

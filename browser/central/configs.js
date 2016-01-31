@@ -12,18 +12,18 @@ var configs = {
 var gestureData = {
   SLASH: {
     label: 'Slash your arm across!',
-    image: '/images/placeholder-slash.png'
+    image: '/assets/placeholder-slash.png'
   },
   SPIN: {
     label: 'Spin around!',
-    image: '/images/placeholder-spin.png'
+    image: '/assets/placeholder-spin.png'
   },
   RAISEARMS: {
     label: 'Raise your arms up!',
-    image: '/images/placeholder-raisearms.png'
+    image: '/assets/placeholder-raisearms.png'
   },
   SHAKE: {
     label: 'Shake the phone!',
-    image: '/images/placeholder-shake.png'
+    image: '/assets/placeholder-shake.png'
   },
 }

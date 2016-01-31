@@ -1,7 +1,8 @@
 module.exports = configs = {
   errors: {
     GAME_ALREADY_STARTED: 'GAME_ALREADY_STARTED',
-    GAME_NOT_STARTED: 'GAME_NOT_STARTED'
+    GAME_NOT_STARTED: 'GAME_NOT_STARTED',
+    GAME_FULL: 'GAME_FULL'
   },
 
   gestures: [
@@ -11,5 +12,5 @@ module.exports = configs = {
     'SHAKE'
   ],
 
-  minPlayers: 2
+  playersPerSession: 2
 }
