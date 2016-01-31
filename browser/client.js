@@ -132,7 +132,6 @@ var speedDetector = {
 
         setText("message", "Go really fast!");
         setText("speed-detection", "NO");
-        setBgColor('green');
     },
 
     update: function() {
