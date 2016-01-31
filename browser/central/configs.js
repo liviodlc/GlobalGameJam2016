@@ -1,7 +1,7 @@
 var endpoints = {
   // connect: '/central/connect'
-  startSession: 'http://localhost:8080/session/start',
-  pollSession: 'http://localhost:8080/session/poll',
+  startSession: '/session/start',
+  pollSession: '/session/poll',
 }
 
 var configs = {
@@ -11,18 +11,18 @@ var configs = {
 var gestureData = {
   SLASH: {
     label: 'Slash your arm across!',
-    image: 'http://localhost:8080/images/placeholder-slash.png'
+    image: '/images/placeholder-slash.png'
   },
   SPIN: {
     label: 'Spin around!',
-    image: 'http://localhost:8080/images/placeholder-spin.png'
+    image: '/images/placeholder-spin.png'
   },
   RAISEARMS: {
     label: 'Raise your arms up!',
-    image: 'http://localhost:8080/images/placeholder-raisearms.png'
+    image: '/images/placeholder-raisearms.png'
   },
   SHAKE: {
     label: 'Shake the phone!',
-    image: 'http://localhost:8080/images/placeholder-shake.png'
+    image: '/images/placeholder-shake.png'
   },
 }
