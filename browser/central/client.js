@@ -10,13 +10,15 @@ var gameState = {
   sequence: []
 }
 
+var end_clicked = false;
 function endSession() {
-  if (!gameState.running) {
+  if (end_clicked) {
     window.location = '';
     return;
   }
   $.get(endpoints.endSession, function(response) {
-    $('#end-game').attr('value', 'refresh to play again')
+    $('#end-game').attr('value', 'refresh to play again');
+    end_clicked = true;
   });
   setTimeout(function() {
     gameState.running = false;
@@ -109,8 +111,9 @@ var render = {
   },
 
   players: function(session) {
+    $('.player span').addClass('waiting-for-player').removeClass('has-player');
     for (var i = 0; i < session.players.length; i++) {
-      $('#player-' + i).text('Player ' + (i+1) + ': ' + session.players[i].name);
+      $('#player-' + i).removeClass('waiting-for-player').addClass('has-player').text(session.players[i].name);
     }
   },
 
