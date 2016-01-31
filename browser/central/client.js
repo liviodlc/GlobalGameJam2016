@@ -135,7 +135,7 @@ var render = {
     }
     if (winner_id) {
         $('.has-player').addClass('lost');
-        $('.player-id-' + winner_id).addClass('won');
+        $('.player-id-' + winner_id).removeClass('lost').addClass('won');
     }
   },
 

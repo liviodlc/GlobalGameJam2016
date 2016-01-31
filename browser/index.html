@@ -110,17 +110,23 @@
         }
 
         .player .has-player.won {
-            animation: grow 1s ease-in;
+            /*animation: grow 1s ease-in;
             -webkit-animation: grow 1s ease-in;
             -moz-animation: grow 1s ease-in;
-            -o-animation: grow 1s ease-in;
+            -o-animation: grow 1s ease-in;*/
+            font-size: 100px;
+            transition: font-size 2s;
+            -webkit-transition: font-size 2s;
         }
 
         .player .has-player.lost {
-            animation: shrink 1s ease-in;
+            /*animation: shrink 1s ease-in;
             -webkit-animation: shrink 1s ease-in;
             -moz-animation: shrink 1s ease-in;
-            -o-animation: shrink 1s ease-in;
+            -o-animation: shrink 1s ease-in;*/
+            font-size: 13px;
+            transition: font-size 2s;
+            -webkit-transition: font-size 2s;
         }
 
         #next-sequence {
@@ -271,7 +277,7 @@
         <div id='game-status'></div>
         <div class='player'>
             <span id='player-0' class='waiting-for-player'>[waiting for player 1]</span>
-            vs.
+            <span id='vs'>vs.</span>
             <span id='player-1' class='waiting-for-player'>[waiting for player 2]</span>
         </div>
         <div id='next-sequence'></div>
