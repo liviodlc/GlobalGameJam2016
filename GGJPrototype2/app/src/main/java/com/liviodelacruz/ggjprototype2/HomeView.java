@@ -20,6 +20,7 @@ public class HomeView extends SurfaceView implements SurfaceHolder.Callback {
     private static final String TAG = HomeView.class.getSimpleName();
 
     MediaPlayer firebg;
+    boolean isPaused = false;
     Context context;
 
     private SurfaceHolder ourHolder;
@@ -41,6 +42,7 @@ public class HomeView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
+
     }
 
     @Override
@@ -55,10 +57,13 @@ public class HomeView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void pause() {
         firebg.pause();
+        isPaused = true;
     }
 
     // Make a new thread and start it
     // Execution moves to our R
     public void resume() {
+        if(isPaused)
+            firebg.start();
     }
 }

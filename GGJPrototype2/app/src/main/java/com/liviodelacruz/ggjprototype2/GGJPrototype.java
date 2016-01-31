@@ -5,19 +5,17 @@ import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.view.MotionEventCompat;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MotionEvent;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import java.io.*;
-import java.net.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class GGJPrototype extends Activity {
+public class GGJPrototype extends Activity implements NetworkerCallback {
 
     private static final String TAG = GGJPrototype.class.getSimpleName();
 
@@ -34,6 +32,7 @@ public class GGJPrototype extends Activity {
         layout.setGravity(Gravity.CENTER);
         RelativeLayout.LayoutParams lparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.MATCH_PARENT);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         menuView = new HomeView(this);
         layout.addView(menuView);
@@ -58,7 +57,28 @@ public class GGJPrototype extends Activity {
 
         setContentView(layout, lparams);
 
-        new Networker();
+        Networker.getMe().addCallBack(this);
+    }
+
+    @Override
+    public boolean onPoll(JSONObject json){
+        try {
+            if (!json.has("error") && json.getJSONObject("session").getString("status").equals("STARTED")) {
+                JSONArray jarr = json.getJSONObject("session").getJSONArray("players");
+                if(jarr.getJSONObject(0).getString("id").equals(""+Networker.id)) {
+                    Networker.name = jarr.getJSONObject(0).getString("name");
+                }else if(jarr.getJSONObject(1).getString("id").equals(""+Networker.id)) {
+                    Networker.name = jarr.getJSONObject(0).getString("name");
+                }
+                Intent i = new Intent(this, Game.class);
+                startActivity(i);
+
+                return true;
+            }
+        }catch (JSONException e){
+            Log.e(TAG, e.toString());
+        }
+        return false;
     }
 
     @Override
@@ -73,18 +93,18 @@ public class GGJPrototype extends Activity {
         menuView.resume();
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event){
-
-        int action = MotionEventCompat.getActionMasked(event);
-
-        switch(action) {
-            case (MotionEvent.ACTION_DOWN) :
-                Intent i = new Intent(this, Game.class);
-                startActivity(i);
-                return true;
-            default :
-                return super.onTouchEvent(event);
-        }
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event){
+//
+//        int action = MotionEventCompat.getActionMasked(event);
+//
+//        switch(action) {
+//            case (MotionEvent.ACTION_DOWN) :
+//                Intent i = new Intent(this, Game.class);
+//                startActivity(i);
+//                return true;
+//            default :
+//                return super.onTouchEvent(event);
+//        }
+//    }
 }

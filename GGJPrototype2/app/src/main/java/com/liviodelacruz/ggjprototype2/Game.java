@@ -1,11 +1,25 @@
 package com.liviodelacruz.ggjprototype2;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.WindowManager;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-public class Game extends Activity{
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class Game extends Activity implements NetworkerCallback{
+
+    private static final String TAG = Game.class.getSimpleName();
 
     private WizardView gameView;
+    private RelativeLayout layout;
 
     public Game(){
 
@@ -15,8 +29,39 @@ public class Game extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        layout = new RelativeLayout(this);
+        layout.setGravity(Gravity.CENTER);
+        RelativeLayout.LayoutParams lparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         gameView = new WizardView(this);
-        setContentView(gameView);
+        layout.addView(gameView);
+
+        TextView tview = new TextView(this);
+        RelativeLayout.LayoutParams tparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        tview.setTextColor(Color.BLACK);
+        tview.setText(Networker.name);
+        tview.setTextSize(40f);
+        layout.addView(tview, tparams);
+
+        setContentView(layout, lparams);
+
+        Networker.getMe().addCallBack(this);
+    }
+
+    @Override
+    public boolean onPoll(JSONObject json){
+//        try {
+//            if (!json.has("error") && json.getJSONObject("session").getString("status").equals("STARTED")) {
+//
+//            }
+//        }catch (JSONException e){
+//            Log.e(TAG, e.toString());
+//        }
+        return true;
     }
 
     @Override
