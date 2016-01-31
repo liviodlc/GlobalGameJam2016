@@ -1,6 +1,7 @@
 var configs = {
     dataSampleInterval: 20, // milliseconds
-    showLiveData: false
+    showLiveData: false,
+    printDataLog: false
 }
 
 var t0 = new Date();
@@ -221,6 +222,8 @@ function getLastDatum() {
 }
 
 var printNextDatum = function(datum) {
+    if (!configs.printDataLog) return;
+
     if (allSampledData.length === 0) return;
     if (!datum) return;
 
@@ -275,8 +278,8 @@ function go() {
     flagNextDatum = false;
 
     // Detect gestures
-    if (spinDetector.running) {
-        spinDetector.update();
+    if (speedDetector.running) {
+        speedDetector.update();
     }
 
     window.setTimeout(go, configs.dataSampleInterval);
@@ -289,6 +292,6 @@ window.onload = function() {
     if (!configs.showLiveData) {
         document.getElementById('liveData').remove();
     }
-    spinDetector.initiate();
+    speedDetector.initiate();
     go();
 }
