@@ -71,6 +71,7 @@ var spinDetector = {
             this.waitingForDataBeforeStarting = true;
             return;
         }
+        this.waitingForDataBeforeStarting = false;
 
         setText("message", "Spin in a circle!");
         setText("spin-detection", "NO");
