@@ -16,7 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Game extends Activity implements NetworkerCallback{
-
+    
     private static final String TAG = Game.class.getSimpleName();
 
     private WizardView gameView;
