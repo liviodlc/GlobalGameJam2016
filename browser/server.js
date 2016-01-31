@@ -48,6 +48,7 @@ app.get('/session/poll', function(req, res) {
   res.set('Content-Type', 'application/json');
   // console.log('/session/poll', req.query);
 
+  currentGameSession.refreshTimeout();
   res.end(standardOutput());
 })
 
@@ -122,6 +123,7 @@ app.get('/player/fail', function(req, res) {
 })
 
 app.get('/player/sequence/finish', function(req, res) {
+  console.log('/player/sequence/finish', req.query);
   var id = req.query.id;
   currentGameSession.playerFinishedSequence(req.query.id);
   res.end(standardOutput());

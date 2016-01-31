@@ -46,6 +46,7 @@ function poll() {
   $.get(endpoints.pollSession, function(response) {
 
     // todo: what if server is down?
+
     console.log('session poll data:', response);
 
     if (response.error) {
@@ -84,8 +85,12 @@ function handleUpdatedGameSession(session) {
 
   render.gameSessionStatus(session);
 
+  console.log('playersFinished:', session.playersFinished)
+
+  render.playersFinished(session);
+
   if (session.status === 'DEAD') {
-    redner.clear();
+    render.clear();
   }
 }
 
@@ -113,7 +118,24 @@ var render = {
   players: function(session) {
     $('.player span').addClass('waiting-for-player').removeClass('has-player');
     for (var i = 0; i < session.players.length; i++) {
-      $('#player-' + i).removeClass('waiting-for-player').addClass('has-player').text(session.players[i].name);
+      $('#player-' + i)
+        .removeClass('waiting-for-player')
+        .addClass('has-player')
+        .addClass('player-id-' + session.players[i].id)
+        .text(session.players[i].name);
+    }
+  },
+
+  playersFinished: function(session) {
+    var winner_id = null;
+    for (var id in session.playersFinished) {
+      if (session.playersFinished[id]) {
+        winner_id = id;
+      }
+    }
+    if (winner_id) {
+        $('.has-player').addClass('lost');
+        $('.player-id-' + winner_id).addClass('won');
     }
   },
 
@@ -131,4 +153,13 @@ var render = {
       $gesture.append($img).append($text).appendTo($container);
     }
   }
+}
+
+var getPlayerName = function(id, session) {
+  for (var i = 0; i < session.players.length; i++) {
+    if (session.players[i].id === id) {
+      return session.players[i].name;
+    }
+  }
+  return '';
 }
