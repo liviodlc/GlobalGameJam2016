@@ -54,7 +54,7 @@ module.exports = GameSession = {
 
   addPlayer: function(player) {
     this.players.push(player);
-    this.playersFinished[id] = false;
+    this.playersFinished[player.id] = false;
     if (this.players.length >= configs.playersPerSession) {
       this.start();
     }
