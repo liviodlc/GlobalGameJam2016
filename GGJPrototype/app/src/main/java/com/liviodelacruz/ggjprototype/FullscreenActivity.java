@@ -1,12 +1,15 @@
 package com.liviodelacruz.ggjprototype;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -117,13 +120,14 @@ public class FullscreenActivity extends AppCompatActivity {
         // are available.
         delayedHide(100);
 
-//        Thread game = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                new GameEngine();
-//            }
-//        });
-//        game.start();
+        final FrameLayout currentLayout = (FrameLayout) findViewById(R.id.main);
+        Thread game = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                new GameEngine(currentLayout);
+            }
+        });
+        game.start();
     }
 
     private void toggle() {
