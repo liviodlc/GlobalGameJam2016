@@ -1,1 +1,4 @@
 browser/node_modules/*
+video-bg/*
+*.mov
+

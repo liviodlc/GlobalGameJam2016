@@ -12,7 +12,7 @@ var app = express();
 
 // serve client files
 app.use(express.static(__dirname));
-app.listen(8080);
+app.listen(80);
 
 
 app.get('/hello', function(req, res) {
