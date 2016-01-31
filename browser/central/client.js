@@ -11,7 +11,9 @@ var gameState = {
 }
 
 function endSession() {
-  $.get(endpoints.endSession, function(response) {});
+  $.get(endpoints.endSession, function(response) {
+    $('#end-game').attr('value', 'refresh to play again')
+  });
   setTimeout(function() {
     gameState.running = false;
   }, configs.pollInterval * 2)
@@ -65,8 +67,11 @@ function handleUpdatedGameSession(session) {
   console.log('********* UPDATED STATUS:', session.status);
 
   if (session.status === 'STARTED') {
-    gameState.sequence = session.sequence;
-    render.nextSequence(session.sequence);
+    $('#background-fire').addClass('faded-fire');
+    setTimeout(function() {
+      gameState.sequence = session.sequence;
+      render.nextSequence(session.sequence);
+    }, 2000);
   }
 
   render.players(session);
