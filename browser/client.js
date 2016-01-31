@@ -1,7 +1,7 @@
 var configs = {
     dataSampleInterval: 20, // milliseconds
     showLiveData: false,
-    printDataLog: false
+    printDataLog: false,
 }
 
 var t0 = new Date();
@@ -112,6 +112,8 @@ var spinDetector = {
 
 // The spin detector looks for when the orientation.alpha goes past 360deg cumulatively
 var speedDetector = {
+    maxSpeed: 20,
+
     start: null,
     running: false,
     waitingForDataBeforeStarting: false,
@@ -130,6 +132,7 @@ var speedDetector = {
 
         setText("message", "Go really fast!");
         setText("speed-detection", "NO");
+        setBgColor('green');
     },
 
     update: function() {
@@ -149,7 +152,7 @@ var speedDetector = {
 
         setText('speed-max-accel', this.maxAccelSoFar);
 
-        if (this.maxAccelSoFar > 10000000000) {
+        if (this.maxAccelSoFar > this.maxSpeed) {
             this.triggerDetection();
         }
 
@@ -159,6 +162,7 @@ var speedDetector = {
     triggerDetection: function() {
         setText("speed-detection", "YES");
         setText("message", "WOW YOU DID IT!");
+        setBgColor('green');
         this.running = false;
     }
 
@@ -178,6 +182,10 @@ function abs3(vector) {
 
 function setText(id, text) {
     document.getElementById(id).innerText = text;
+}
+
+function setBgColor(color) {
+    document.body.style.backgroundColor = color;
 }
 
 function updateLiveData() {
