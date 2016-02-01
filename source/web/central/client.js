@@ -10,18 +10,14 @@ var gameState = {
   sequence: []
 }
 
-var end_clicked = false;
 function endSession() {
-  if (end_clicked) {
-    window.location = '';
-    return;
-  }
   $.get(endpoints.endSession, function(response) {
     $('#end-game').attr('value', 'refresh to play again');
     end_clicked = true;
   });
   setTimeout(function() {
     gameState.running = false;
+    window.location = '';
   }, configs.pollInterval * 2)
 }
 
