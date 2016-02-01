@@ -1,7 +1,6 @@
 $(window).on('load', function() {
   console.log('Loaded');
   startSession();
-  // render.nextSequence(['SLASH', 'SPIN', 'SPIN']); // for testing
 })
 
 var gameState = {
