@@ -104,7 +104,7 @@ public class GGJPrototype extends Activity implements NetworkerCallback {
                         tview.setText("Welcome, "+Networker.name);
                         layout.addView(tview, tparams);
                     }else if(jarr.getJSONObject(1).getString("id").equals(""+Networker.id)) {
-                        Networker.name = jarr.getJSONObject(0).getString("name");
+                        Networker.name = jarr.getJSONObject(1).getString("name");
                         tview.setText("Welcome, "+Networker.name);
                         layout.addView(tview, tparams);
                     }
