@@ -23,12 +23,12 @@ var gestureData = {
     image: '/assets/placeholder-raisearms.png'
   },
   SHAKE: {
-    label: 'Charge your wand!',
+    label: '1. Charge your wand!',
     image: '/assets/shake_animation.gif'
   },
   FINISH: {
-    label: 'Spin to charge EVEN MORE!',
-    label2: 'Finish With A Flourish!',
+    label: '2. Spin to charge EVEN MORE!',
+    label2: '3. Finish With A Flourish!',
     image: '/assets/spin_animation.gif',
     image2: '/assets/finish_animation.gif',
   }
