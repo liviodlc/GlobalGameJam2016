@@ -67,6 +67,11 @@
             top: 15rem;
             font-size: 500px;
         }
+        #room-code {
+            color: #FF3D00;
+            font-size: 30px;
+            margin: 2rem 0;
+        }
         input[type='button'] {
             cursor: pointer;
         }
@@ -277,7 +282,7 @@
 
     </style>
     <body>
-        <img id='background-fire' src='/assets/fire.gif'>
+        <!-- <img id='background-fire' src='/assets/fire.gif'> -->
         <h1 id='title'>Kung Fu Wizard Battle!</h1>
         <h3 class='bigtext' id='bigtext1'>kung fu</h3>
         <h3 class='bigtext' id='bigtext2'>wizard</h3>
@@ -286,6 +291,7 @@
         <div id='game-already-running' style='display:none'>
             It looks like a game is already in session! Go find that game!
         </div>
+        <div id='room-code' style='display:none'>Room code: <span></span></div>
         <div id='game' style='display:none'>
         <input id='end-game' type='button' onclick='javascript:endSession();' value='end game'>
             <div>First wizard to cast the spell WINS!</div>

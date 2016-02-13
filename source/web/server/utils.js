@@ -4,6 +4,15 @@ module.exports = utils = {
     return array[i];
   },
 
+  randomRoomCode: function() {
+    // 6 random numbers
+    var id = '';
+    for (var i = 0; i < 6; i++) {
+      id += Math.floor(Math.random() * 10).toString();
+    }
+    return id;
+  },
+
   randomName: function() {
     // http://www.namegenerator.biz/game-name-generator.php
     return this.choice([
