@@ -6,11 +6,12 @@ $(window).on('load', function() {
 var gameState = {
   running: false,
   status: null,
-  sequence: []
+  sequence: [],
+  roomCode: ''
 }
 
 function endSession() {
-  $.get(endpoints.endSession, function(response) {
+  $.get(endpoints.endSession(gameState.roomCode), function(response) {
     $('#end-game').attr('value', 'refresh to play again');
     end_clicked = true;
   });
@@ -21,8 +22,8 @@ function endSession() {
 }
 
 function startSession() {
-  console.log(endpoints.connect);
-  $.get(endpoints.startSession, function(response) {
+  // console.log(endpoints.connect());
+  $.get(endpoints.startSession(gameState.roomCode), function(response) {
     console.log('new session response data:', response);
 
     if (response.error) {
@@ -31,7 +32,10 @@ function startSession() {
 
     $('#game').show();
 
+    render.roomCode(response.session); // or maybe put this in handleUpdatedGameSession
+
     gameState.running = true;
+    gameState.roomCode = response.session.roomCode;
     handleUpdatedGameSession(response.session);
     poll();
   });
@@ -40,7 +44,7 @@ function startSession() {
 function poll() {
   if (!gameState.running) { return; }
 
-  $.get(endpoints.pollSession, function(response) {
+  $.get(endpoints.pollSession(gameState.roomCode), function(response) {
 
     // todo: what if server is down?
 
@@ -72,6 +76,8 @@ function handleUpdatedGameSession(session) {
 
   if (session.status === 'STARTED') {
     $('#background-fire').addClass('faded-fire');
+    $('#room-code').hide();
+
     setTimeout(function() {
       gameState.sequence = session.sequence;
       render.nextSequence(session.sequence);
@@ -104,6 +110,11 @@ var render = {
   clear: function() {
     $('.player').empty();
     $('#next-sequence').empty();
+    $('#room-code').hide()
+  },
+
+  roomCode: function(session) {
+    $('#room-code').show().find('span').text(session.roomCode);
   },
 
   gameSessionStatus: function(session) {

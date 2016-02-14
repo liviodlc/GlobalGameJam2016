@@ -1,8 +1,8 @@
 var endpoints = {
   // connect: '/central/connect'
-  startSession: '/session/start',
-  pollSession: '/session/poll',
-  endSession: '/session/end',
+  startSession: function() { return '/session/start' },
+  pollSession:  function(code) { return '/session/poll?roomCode=' + code; },
+  endSession: function(code) { return '/session/end?roomCode=' + code; },
 }
 
 var configs = {

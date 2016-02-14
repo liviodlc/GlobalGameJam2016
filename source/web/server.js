@@ -5,7 +5,8 @@ var GameSession = require('./server/game-session');
 var Player = require('./server/player');
 var utils = require('./server/utils');
 
-var currentGameSession = GameSession;
+var gameSessions = {}; // map room code > session
+
 
 // ================================================== network
 var app = express();
@@ -16,7 +17,7 @@ app.listen(process.env.PORT || 80);
 
 
 app.get('/hello', function(req, res) {
-    res.end("Hello and welcome to KUNG FU WIZARD BATTLE");
+  res.end("Hello and welcome to KUNG FU WIZARD BATTLE");
 })
 
 app.use(function(req, res, next) {
@@ -32,34 +33,37 @@ app.get('/session/start', function(req, res) {
   res.set('Content-Type', 'application/json');
   console.log('/session/start', req.query);
 
-  // see if there's already a gamesession going
-  if (currentGameSession.alive) {
-    return res.end(JSON.stringify({
-      error: configs.errors.GAME_ALREADY_STARTED,
-      session: null
-    }));
-  }
+  // make a new session
+  var currentGameSession = new GameSession();
+  gameSessions[currentGameSession.roomCode] = currentGameSession;
+
+  console.log('New game in session:', currentGameSession.roomCode);
 
   currentGameSession.initialize();
-  res.end(standardOutput());
+  res.end(standardOutput(currentGameSession));
 })
 
 app.get('/session/poll', function(req, res) {
   res.set('Content-Type', 'application/json');
-  // console.log('/session/poll', req.query);
+
+  var currentGameSession = gameSessions[req.query.roomCode];
+  if (!currentGameSession) return res.end(standardInvalidRoomCodeOutput());
 
   currentGameSession.refreshTimeout();
-  res.end(standardOutput());
+  res.end(standardOutput(currentGameSession));
 })
 
 app.get('/session/end', function(req, res) {
   res.set('Content-Type', 'application/json');
   console.log('/session/end', req.query);
 
+  var currentGameSession = gameSessions[req.query.roomCode];
+  if (!currentGameSession) return res.end(standardInvalidRoomCodeOutput());
+
   // Todo: have the browser client send a key to identify itself
   currentGameSession.end();
 
-  res.end(standardOutput());
+  res.end(standardOutput(currentGameSession));
 })
 // ================================================== player endpoints
 
@@ -67,12 +71,8 @@ app.get('/player/connect', function(req, res) {
   res.set('Content-Type', 'application/json');
   console.log('/player/connect', req.query);
 
-  if (!currentGameSession || !currentGameSession.alive) {
-    return res.end(JSON.stringify({
-      error: configs.errors.GAME_NOT_STARTED,
-      session: null,
-    }));
-  }
+  var currentGameSession = gameSessions[req.query.roomCode];
+  if (!currentGameSession) return res.end(standardInvalidRoomCodeOutput());
 
   // make sure there isn't already a player with this id
   if (currentGameSession.hasPlayerId(req.query.id)) {
@@ -88,7 +88,6 @@ app.get('/player/connect', function(req, res) {
       session: null
     }));
   }
-
 
   var player = new Player(req.query.id);
 
@@ -106,34 +105,44 @@ app.get('/player/connect', function(req, res) {
 })
 
 app.get('/player/poll', function(req, res) {
-  if (!currentGameSession || !currentGameSession.alive) {
-    return res.end(JSON.stringify({
-      error: configs.errors.GAME_NOT_STARTED,
-      session: null
-    }));
-  }
+  var currentGameSession = gameSessions[req.query.roomCode];
+  if (!currentGameSession) return res.end(standardInvalidRoomCodeOutput());
 
-  res.end(standardOutput());
+  res.end(standardOutput(currentGameSession));
 })
 
 
 app.get('/player/fail', function(req, res) {
   var id = req.query.id;
+  var currentGameSession = gameSessions[req.query.roomCode];
+  if (!currentGameSession) return res.end(standardInvalidRoomCodeOutput());
+
   res.end('NYI');
 })
 
 app.get('/player/sequence/finish', function(req, res) {
   console.log('/player/sequence/finish', req.query);
   var id = req.query.id;
+
+  var currentGameSession = gameSessions[req.query.roomCode];
+  if (!currentGameSession) return res.end(standardInvalidRoomCodeOutput());
+
   currentGameSession.playerFinishedSequence(req.query.id);
-  res.end(standardOutput());
+  res.end(standardOutput(currentGameSession));
 })
 
 // ================================================== misc
 
 /// Standard res.end output
-function standardOutput() {
+function standardOutput(session) {
   return JSON.stringify({
-    session: currentGameSession.getData()
+    session: session.getData()
+  })
+}
+
+function standardInvalidRoomCodeOutput() {
+  return JSON.stringify({
+    error: configs.errors.NEED_VALID_ROOM_CODE,
+    session: null
   })
 }
