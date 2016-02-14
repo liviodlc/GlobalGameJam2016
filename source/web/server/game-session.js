@@ -96,7 +96,7 @@ GameSession.prototype.refreshTimeout = function() {
   var _this = this;
   if (this.lastTimeout) clearTimeout(this.lastTimeout);
   this.lastTimeout = setTimeout(function() {
-    console.log('Session timed out after', configs.sessionTimeout, 'milliseconds of silence')
+    console.log('Session ' + _this.roomCode + ' timed out after', configs.sessionTimeout, 'milliseconds of silence')
     _this.end();
   }, configs.sessionTimeout);
 }
