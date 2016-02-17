@@ -13,9 +13,8 @@ import java.util.Scanner;
 public class Networker implements Runnable {
 
     private static final String TAG = Networker.class.getSimpleName();
-    private static final String URL1 = "http://ggj2016game.cloudapp.net/player/connect?";
-    private static final String URL2_ID = "?id=";
-    private static final String URL3_RC = "&roomCode=";
+    private static final String URL1 = "http://ggj2016game.cloudapp.net/player/connect?id=";
+    private static final String URL2 = "&roomCode=";
 
     private static final String ENDPOINT_FINISH = "http://ggj2016game.cloudapp.net/player/sequence/finish?id=";
 
@@ -62,7 +61,7 @@ public class Networker implements Runnable {
     private void doFirstConnect(){
         JSONObject json = null;
         try {
-            json = new JSONObject(connect(URL1 + URL2_ID + id + URL3_RC + roomCode));
+            json = new JSONObject(connect(URL1 + id + URL2 + roomCode));
         } catch (JSONException e) {
             Log.e(TAG, e.getMessage());
         }
@@ -73,7 +72,7 @@ public class Networker implements Runnable {
         while(keepPolling){
             JSONObject json = null;
             try{
-                json = new JSONObject(connect(URL1 + URL2_ID + id + URL3_RC + roomCode));
+                json = new JSONObject(connect(URL1 + id + URL2 + roomCode));
             }catch (JSONException e){
                 Log.e(TAG, e.getMessage());
             }

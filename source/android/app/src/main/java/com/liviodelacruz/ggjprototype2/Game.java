@@ -54,11 +54,11 @@ public class Game extends Activity implements NetworkerCallback{
 
         setContentView(layout, lparams);
 
-        Networker.getMe().addCallBack(this);
+//        Networker.getMe().addCallBack(this);
     }
 
     @Override
-    public boolean onPoll(JSONObject json){
+    public void onServerResponse(JSONObject json){
 //        try {
 //            if (!json.has("error") && json.getJSONObject("session").getString("status").equals("STARTED")) {
 //
@@ -66,7 +66,6 @@ public class Game extends Activity implements NetworkerCallback{
 //        }catch (JSONException e){
 //            Log.e(TAG, e.toString());
 //        }
-        return true;
     }
 
     @Override

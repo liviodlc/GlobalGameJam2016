@@ -79,7 +79,7 @@ public class WizardView extends SurfaceView implements Runnable, SensorEventList
 
     private void endGame(){
         c = Color.BLACK;
-        Networker.getMe().finish();
+//        Networker.getMe().finish();
         pause();
     }
 
