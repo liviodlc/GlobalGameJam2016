@@ -1,6 +1,7 @@
 package com.liviodelacruz.ggjprototype2;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
@@ -14,8 +15,10 @@ import android.text.method.TransformationMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -148,13 +151,14 @@ public class GGJPrototype extends Activity implements NetworkerCallback, TextVie
 					tparams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
 					if (jarr.getJSONObject(0).getString("id").equals("" + Networker.id)) {
 						Networker.name = jarr.getJSONObject(0).getString("name");
-						tview.setText("Welcome, " + Networker.name);
-						layout.addView(tview, tparams);
 					} else if (jarr.getJSONObject(1).getString("id").equals("" + Networker.id)) {
 						Networker.name = jarr.getJSONObject(1).getString("name");
-						tview.setText("Welcome, " + Networker.name);
-						layout.addView(tview, tparams);
 					}
+					layout.removeView(et);
+					tview.setText("Welcome, " + Networker.name);
+					layout.addView(tview, tparams);
+					InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					mgr.hideSoftInputFromWindow(et.getWindowToken(), 0);
 				} catch (JSONException e) {
 					Log.e(TAG, e.toString());
 				}
