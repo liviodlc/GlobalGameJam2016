@@ -14,4 +14,3 @@ How to Play Again:
 1. Shutdown the app on both Android devices.
 
 2. On your computer, click End Game.
-
